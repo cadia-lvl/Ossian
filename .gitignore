@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#index
+.DS_Store
+
 #corpus
 corpus/
 
@@ -11,6 +14,9 @@ tools/bin/
 tools/include/
 tools/merlin/
 tools/share/
+
+#virtualenv
+ossian/
 
 # C extensions
 *.so
