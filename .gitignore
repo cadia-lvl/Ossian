@@ -3,6 +3,12 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#installed tools
+tools/bin/
+tools/include/
+tools/merlin/
+tools/share/
+
 # C extensions
 *.so
 
