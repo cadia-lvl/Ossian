@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#corpus
+corpus/
+
 #installed tools
 tools/bin/
 tools/include/
