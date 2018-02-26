@@ -77,7 +77,10 @@ def add_syllable_structure(node, pronunciation, syllable_delimiter='|', syllable
         for phone in phones:
             if phone == '':
                 continue
-            if phone.endswith('0') or phone.endswith('1') or phone.endswith('2'):
+            # voiceless consonants in x-sampa notation end with '_0', don't mix up with stress mark '0'
+            if phone.endswith('_0'):
+                phone = phone
+            elif phone.endswith('0') or phone.endswith('1') or phone.endswith('2'):
                 stress_marks.append(phone[-1])
                 phone = phone.strip('012')
             clean_phones.append(phone)
