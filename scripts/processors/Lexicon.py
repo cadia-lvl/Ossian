@@ -287,6 +287,7 @@ class Lexicon(SUtteranceProcessor):
             for (tag, pron) in prons:
               
                 pron = re.sub('\d','',pron) ## remove stress marks so we can look up vowels
+                pron = re.sub('_ ', '_0 ', pron)  ## reconstruct voicelessness label
                 sylls = pron.split(' | ')
                 for syll in sylls:
                     phones = syll.split(' ')
