@@ -213,7 +213,7 @@ class SUtteranceProcessor(object):
             return  ## don't do anything
         
         if utterance.get("status") != "OK":
-            print "-",
+            print " - status not OK: " + utterance.get_filename(),
             return
 
         ## Add the name of the processor to the utt -- don't apply a processor 2ce:
