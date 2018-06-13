@@ -63,6 +63,8 @@ def main_work():
                             uses only voice prompts if not specified""")
     a.add_argument('-d', dest='command_line_corpus', required=False, action="append", \
                     help= "directories in arbitrary location containing training data")
+    a.add_argument('-file_num', dest='file_num', required=False, \
+                 help="specify number of files to be used in training")
     
     a.add_argument('-p', dest='max_cores', required=False, help="maximum number of CPU cores to use in parallel")
     a.add_argument('-bin', dest='custom_bindir') 
@@ -103,13 +105,22 @@ def train(opts, dirs):
         if opts.text_corpus_name:
             corpora.append(os.path.join(dirs['CORPUS'], opts.lang,fname.TEXT_CORPORA, opts.text_corpus_name))
 
+    # Set file number
+    if opts.file_num:
+        file_num = int(opts.file_num)
+    else:
+        file_num = float("inf")
 
-
-    ## Get names of individual txt and wav files:
+    # Get names of individual txt and wav files:
     voice_data = []
     for c in corpora:
-        for f in os.listdir(c):
+        count = 0
+        for f in sorted(os.listdir(c)):
             voice_data.append(os.path.join(c, f))
+            count += 1
+            # Stop appending voice data at file_num
+            if count >= file_num:
+                break
 
     corpus = Corpus.Corpus(voice_data)
     
