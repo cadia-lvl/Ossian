@@ -4,7 +4,7 @@ import sys
 import sqlite3
 
 
-DATABASE = '<path/to/database.db>'
+DATABASE = '</PATH/TO/DATABASE>'
 
 SQL_CREATE = 'CREATE TABLE IF NOT EXISTS frob(id INTEGER PRIMARY KEY, word TEXT, ' \
                      'transcript TEXT) '

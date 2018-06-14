@@ -11,7 +11,7 @@ import sqlite3
 import entry
 
 
-DATABASE = '<path-to-database>'
+DATABASE = '<PATH/TO/DATABASE>'
 
 SQL_SELECT = 'SELECT * FROM compound_transcr'
 SQL_SELECT_COMPOUND = 'SELECT * FROM compound_transcr WHERE word = ?'
