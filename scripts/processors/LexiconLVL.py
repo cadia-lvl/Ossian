@@ -3,6 +3,11 @@ import default.const as c
 
 from Lexicon import Lexicon
 
+from pron_dict import entry
+from pron_dict import syllabification
+from pron_dict import tree_builder
+
+
 
 class LexiconLVL(Lexicon):
     def __init__(self, processor_name='lexicon', target_nodes="//token", \
@@ -19,48 +24,88 @@ class LexiconLVL(Lexicon):
                                          possible_pause_classes, dictionary, backoff_pronunciation, lts_variants,
                                          lts_ntrain, lts_gram_length, max_graphone_letters, max_graphone_phones)
 
-    def syllabify(self, phonestring):
+    def get_phonetic_segments(self, word, part_of_speech=None):
+
+        word = word.lower()
+        word = word.strip("'\" ;,")
+
+        initialism_patt = '\A([a-z]\.)+\Z'
+        if re.match(initialism_patt, word):
+            pronunciation = self.get_initialism(word)
+            method = 'letter_prons'
+        elif word in self.entries:
+            method = 'lex'
+            if len(self.entries[word]) == 1:  ## unique, no disambig necessary
+                tag, pronunciation = self.entries[word][0]  ## for now take first
+            else:
+                ## filter ambiguous pronunciations by first part of tag (POS):
+                ## if there *is* no POS, take first in list:
+                if not part_of_speech:
+                    print 'WARNING: no pos tag to disambiguate pronunciation of "%s" -- take first entry in lexicon' % (
+                        word)
+                    tag, pronunciation = self.entries[word][0]  # take first
+                else:
+                    wordpos = part_of_speech.lower()  # node.attrib['pos']
+                    filtered = [(tag, pron) for (tag, pron) in self.entries[word] \
+                                if tag[0] == wordpos]
+                    if len(filtered) == 0:
+                        tag, pronunciation = self.entries[word][0]  # if no POS matches, take first anyway
+                    else:
+                        tag, pronunciation = filtered[0]  ## take first matching filtered dictionary entry
+
+        else:
+            if self.lts_variants == 1:
+                pronunciation = self.get_oov_pronunciation(word)
+            else:
+                pronunciation = self.get_nbest_oov_pronunciations(word, self.lts_variants)
+            if pronunciation != None:
+                pronunciation = self.syllabify(word, pronunciation)
+                method = 'lts'
+            else:
+                pronunciation = self.backoff_pronunciation
+                method = 'default'
+
+        return (pronunciation, method)
+
+    def get_syllable_arr(self, syllables, phonestring):
+        """
+        Create an array of correctly formatted syllables:
+        a) use phonestring to reconstruct the stress labels
+        b) add a '|' at the end of each internal syllable (not after the last syllable)
+
+        :param syllables: an array of Syllable objects, syllable strings are without stress labels
+        :param phonestring: the original phonestring containing stress labels
+        :return:
+        """
+        phone_arr = phonestring.split()
+        syllable_arr = []
+        start_index = 0
+        for syll in syllables:
+            syll_arr = syll.content.split()
+            end_index = start_index + len(syll_arr)
+            stressed_transcr = phone_arr[start_index:end_index]
+            start_index = end_index
+            if end_index == len(phone_arr):
+                syllable_arr.append(' '.join(stressed_transcr))
+            else:
+                syllable_arr.append(' '.join(stressed_transcr) + ' |')
+
+        return syllable_arr
+
+    def syllabify(self, word, phonestring):
         '''
         Syllabify with maximum legal (=observed) onset.
         Take "e g z a1 m"
         return "e g | z a1 m"
         '''
+
         assert '|' not in phonestring
-        plain = re.sub('\d', '', phonestring)  ## remove stress marks so we can look up vowels
-        plainphones = plain.split(' ')
-        phones = phonestring.split(' ')
-        vowel_indexes = [i for (i, phone) in enumerate(plainphones) \
-                         if self.phoneset.lookup(phone, field='vowel_cons') == 'vowel']
+        plain = re.sub('\d', '', phonestring)  ## remove stress marks
+        plain = re.sub('_ ', '_0 ', plain) ## reconstruct voicelessness label
+        plain = re.sub('_$', '_0', plain)  ## reconstruct voicelessness label
+        comp_tree = tree_builder.build_compound_tree(entry.PronDictEntry(word, plain))
+        syllables = []
+        syllabification.syllabify_tree(comp_tree, syllables)
+        res_syllables = self.get_syllable_arr(syllables, phonestring)
 
-        if len(vowel_indexes) > 0:  ## else add nothing to phones and return that.
-
-            start = vowel_indexes[0] + 1
-
-            for end in vowel_indexes[1:]:
-
-                if start == end:  ## juncture between 2 vowels as in 'buyer'
-                    best_split = start
-                else:
-                    split_scores = []
-                    for split in range(start, end):
-                        first_part = tuple(plainphones[start:split])
-                        second_part = tuple(plainphones[split:end])
-
-                        ## Take maximum legal onset:
-                        if second_part in self.onsets:
-                            score = len(second_part)
-                        else:
-                            score = -1
-
-                        ## Older version: score is sum of onset and coda freqs:
-                        # score = self.codas.get(first_part, 0) + self.onsets.get(second_part, 0)
-
-                        split_scores.append((score, split))
-                    split_scores.sort()
-
-                    best_split = split_scores[-1][1]
-                phones[best_split] = '| ' + phones[best_split]
-
-                start = end + 1
-
-        return ' '.join(phones)
+        return ' '.join(res_syllables)
