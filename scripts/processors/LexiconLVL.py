@@ -1,4 +1,6 @@
 import re
+import os
+import sys
 import default.const as c
 
 from Lexicon import Lexicon
@@ -6,7 +8,6 @@ from Lexicon import Lexicon
 from pron_dict import entry
 from pron_dict import syllabification
 from pron_dict import tree_builder
-
 
 
 class LexiconLVL(Lexicon):
@@ -23,6 +24,21 @@ class LexiconLVL(Lexicon):
                                          child_node_type, output_attribute, class_attribute, word_classes, probable_pause_classes,
                                          possible_pause_classes, dictionary, backoff_pronunciation, lts_variants,
                                          lts_ntrain, lts_gram_length, max_graphone_letters, max_graphone_phones)
+
+    def verify(self, voice_resources):
+        """
+        Overridden because we need to locate the dictionary database
+
+        :param voice_resources: a Resources object containing path, lang, and config information to the current voice
+        :return:
+        """
+        super(LexiconLVL, self).verify(voice_resources)
+        self.set_dictdatabase()
+
+    def set_dictdatabase(self):
+        db_location = os.path.join(self.voice_resources.path[c.LANG], 'labelled_corpora', self.dictionary + '_db')
+        assert os.path.isfile(db_location + '/dictionary.db')
+        self.comp_analyzer = tree_builder.CompoundAnalyzer(db_location + '/dictionary.db')
 
     def get_phonetic_segments(self, word, part_of_speech=None):
 
@@ -103,7 +119,7 @@ class LexiconLVL(Lexicon):
         plain = re.sub('\d', '', phonestring)  ## remove stress marks
         plain = re.sub('_ ', '_0 ', plain) ## reconstruct voicelessness label
         plain = re.sub('_$', '_0', plain)  ## reconstruct voicelessness label
-        comp_tree = tree_builder.build_compound_tree(entry.PronDictEntry(word, plain))
+        comp_tree = self.comp_analyzer.build_compound_tree(entry.PronDictEntry(word, plain))
         syllables = []
         syllabification.syllabify_tree(comp_tree, syllables)
         res_syllables = self.get_syllable_arr(syllables, phonestring)
