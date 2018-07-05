@@ -1,6 +1,8 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import re
 import os
-import sys
 import default.const as c
 
 from Lexicon import Lexicon
@@ -40,13 +42,21 @@ class LexiconLVL(Lexicon):
         assert os.path.isfile(db_location + '/dictionary.db')
         self.comp_analyzer = tree_builder.CompoundAnalyzer(db_location + '/dictionary.db')
 
+    def needs_letter_pronunciation(self, word):
+        letter_patt = ur'[a-záðéóúýþæö]'
+        if len(word) == 1 and re.match(letter_patt, word):
+            return True
+        initialism_patt = 'ur\A([a-záðéóúýþæö]\.)+\Z'
+        if re.match(initialism_patt, word):
+            return True
+        return False
+
     def get_phonetic_segments(self, word, part_of_speech=None):
 
         word = word.lower()
         word = word.strip("'\" ;,")
 
-        initialism_patt = '\A([a-z]\.)+\Z'
-        if re.match(initialism_patt, word):
+        if self.needs_letter_pronunciation(word):
             pronunciation = self.get_initialism(word)
             method = 'letter_prons'
         elif word in self.entries:
@@ -116,7 +126,7 @@ class LexiconLVL(Lexicon):
         '''
 
         assert '|' not in phonestring
-        plain = re.sub('\d', '', phonestring)  ## remove stress marks
+        plain = re.sub('[012]', '', phonestring)  ## remove stress marks
         plain = re.sub('_ ', '_0 ', plain) ## reconstruct voicelessness label
         plain = re.sub('_$', '_0', plain)  ## reconstruct voicelessness label
         comp_tree = self.comp_analyzer.build_compound_tree(entry.PronDictEntry(word, plain))
