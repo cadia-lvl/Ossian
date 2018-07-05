@@ -6,7 +6,7 @@ from dict_database import pron_dict_db
 import entry
 
 
-VOWELS = ['a', 'á', 'e', 'é', 'i', 'í', 'o', 'ó', 'u', 'ú', 'y', 'ý', 'ö']
+VOWELS = [u'a', u'á', u'e', u'é', u'i', u'í', u'o', u'ó', u'u', u'ú', u'y', u'ý', u'ö']
 MIN_COMP_LEN = 4
 MIN_INDEX = 2       # the position from which to start searching for a head word
 
