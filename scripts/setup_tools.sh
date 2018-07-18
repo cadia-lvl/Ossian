@@ -37,7 +37,7 @@ if [ $BASIC == 1 ] ; then
     rm -rf $OSSIAN/tools/bin/*
 
     cd $OSSIAN/tools/
-    git clone https://github.com/CSTR-Edinburgh/merlin.git
+    git clone https://github.com/cadia-lvl/merlin.git
     cd merlin
     ## reset to this specific version, which I have tested, must check later versions:--
     git reset --hard 8aed278  
