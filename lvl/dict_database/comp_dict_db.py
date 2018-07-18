@@ -8,7 +8,7 @@ Provides a connection to the compound database
 
 import sys
 import sqlite3
-import entry
+import lvl.pron_dict.entry
 
 
 DATABASE = '<PATH/TO/DATABASE>'

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from dict_database import comp_dict_db
-from dict_database import pron_dict_db
+from lvl.dict_database import comp_dict_db
+from lvl.dict_database import pron_dict_db
 import entry
 
 

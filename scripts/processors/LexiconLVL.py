@@ -3,9 +3,9 @@ import default.const as c
 
 from Lexicon import Lexicon
 
-from pron_dict import entry
-from pron_dict import syllabification
-from pron_dict import tree_builder
+from lvl.pron_dict import entry
+from lvl.pron_dict import syllabification
+from lvl.pron_dict import tree_builder
 
 
 
