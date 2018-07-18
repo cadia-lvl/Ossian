@@ -12,7 +12,7 @@ corpus/
 #installed tools
 tools/bin/
 tools/include/
-#tools/merlin/
+tools/merlin/
 tools/share/
 
 #model files
