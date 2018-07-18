@@ -121,3 +121,8 @@ ENV/
 
 # mypy
 .mypy_cache/
+/test/
+#!/tools/merlin/
+!/corpus/ice/speakers/remove_unwanted.py
+test/txt/icelandic.txt
+test/wav/
