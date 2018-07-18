@@ -12,7 +12,7 @@ corpus/
 #installed tools
 tools/bin/
 tools/include/
-tools/merlin/
+#tools/merlin/
 tools/share/
 
 #model files
@@ -122,7 +122,5 @@ ENV/
 # mypy
 .mypy_cache/
 /test/
-#!/tools/merlin/
 !/corpus/ice/speakers/remove_unwanted.py
-test/txt/icelandic.txt
-test/wav/
+
