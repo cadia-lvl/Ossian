@@ -55,18 +55,21 @@ class NN(object):
 
         norm_count = 0
 
-        # find the json and h5 model files
-        h5 = glob.glob(model_dir + '/*.h5')[0]
-        json = glob.glob(model_dir + '/*.json')[0]
+        try:
+            # find the json and h5 model files
+            h5 = glob.glob(model_dir + '/*.h5')[0]
+            json = glob.glob(model_dir + '/*.json')[0]
 
-        # load json and create model
-        json_file = open(json, 'r')
-        loaded_model_json = json_file.read()
-        json_file.close()
-        self.model = model_from_json(loaded_model_json)
+            # load json and create model
+            json_file = open(json, 'r')
+            loaded_model_json = json_file.read()
+            json_file.close()
+            self.model = model_from_json(loaded_model_json)
 
-        # load weights into new model
-        self.model.load_weights(h5)
+            # load weights into new model
+            self.model.load_weights(h5)
+        except IndexError as e:
+            print('error loading model: %s' % e)
 
         # Do i have to recompile? don't think so
 
@@ -496,7 +499,7 @@ class NNDurationPredictor(SUtteranceProcessor):
             ## TODO: pack up qfile too
             self.model = NNDurationModel(self.model_dir, qfile)
             self.trained = True
-        except AttributeError as e:
+        except AssertionError as e:
             print('Cannot load NN model from model_dir: %s -- not trained yet' % self.model_dir)
             print('error: %s' % e)
             self.trained = False
