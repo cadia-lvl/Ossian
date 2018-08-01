@@ -15,6 +15,11 @@ tools/include/
 tools/merlin/
 tools/share/
 
+#trained/tested models
+train/
+test/
+voices/
+
 #virtualenv
 ossian/
 
@@ -111,6 +116,9 @@ ENV/
 
 # Pycharm project settings
 .idea
+
+# vscode project settings
+.vscode
 
 # mkdocs documentation
 /site
