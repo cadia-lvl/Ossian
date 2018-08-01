@@ -123,12 +123,7 @@ ENV/
 .idea
 
 # vscode project settings
-<<<<<<< HEAD
-.vscode/
-
-=======
 .vscode
->>>>>>> master
 
 # mkdocs documentation
 /site
