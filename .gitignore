@@ -116,6 +116,10 @@ ENV/
 # Pycharm project settings
 .idea
 
+# vscode project settings
+.vscode/
+
+
 # mkdocs documentation
 /site
 
