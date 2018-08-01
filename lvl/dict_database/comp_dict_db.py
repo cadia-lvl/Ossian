@@ -7,10 +7,6 @@ Provides a connection to the compound database
 """
 
 import sqlite3
-<<<<<<< HEAD
-import lvl.pron_dict.entry
-=======
->>>>>>> master
 
 class Comp_DB:
 
