@@ -15,8 +15,14 @@ tools/include/
 tools/merlin/
 tools/share/
 
+<<<<<<< HEAD
 #model files
 train/
+=======
+#trained/tested models
+train/
+test/
+>>>>>>> master
 voices/
 
 #virtualenv
@@ -117,8 +123,12 @@ ENV/
 .idea
 
 # vscode project settings
+<<<<<<< HEAD
 .vscode/
 
+=======
+.vscode
+>>>>>>> master
 
 # mkdocs documentation
 /site
