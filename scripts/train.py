@@ -116,9 +116,10 @@ def train(opts, dirs):
     for c in corpora:
         count = 0
         for f in sorted(os.listdir(c)):
-            voice_data.append(os.path.join(c, f))
-            count += 1
-            # Stop appending voice data at file_num
+            if '._' not in f:
+                voice_data.append(os.path.join(c, f))
+                count += 1
+                # Stop appending voice data at file_num
             if count >= file_num:
                 break
 
