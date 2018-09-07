@@ -4,7 +4,9 @@
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
-from UtteranceProcessor import *
+from __future__ import print_function
+from __future__ import absolute_import
+from .UtteranceProcessor import *
 from util.NodeProcessors import *
 from util.discretise_vsm import *
 from util.LookupTable import *
@@ -84,7 +86,7 @@ class VSMTagger(SUtteranceProcessor):
     def do_training(self, speech_corpus, text_corpus):
         ## Double check not trained:
         if self.trained:
-            print 'VSM tagger already trained'
+            print('VSM tagger already trained')
             return
         
         ## Write training text to a single file:

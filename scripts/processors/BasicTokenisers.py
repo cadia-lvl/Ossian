@@ -4,6 +4,7 @@
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
+from __future__ import print_function
 from naive.naive_util import *
 import unicodedata
 import glob
@@ -77,7 +78,7 @@ class RegexTokeniser(SUtteranceProcessor):
 
     def process_utterance(self, utt):
 
-        print 'target nodes: %s'%(utt.xpath(self.target_nodes))
+        print('target nodes: %s'%(utt.xpath(self.target_nodes)))
         for node in utt.xpath(self.target_nodes):
             assert node.has_attribute(self.split_attribute)
             to_split = node.get(self.split_attribute)
@@ -133,7 +134,7 @@ class RegexTokeniser(SUtteranceProcessor):
         return tokens 
         
     def do_training(self, speech_corpus, text_corpus):
-        print "RegexTokeniser requires no training"    
+        print("RegexTokeniser requires no training")    
 
 
 '''

@@ -5,6 +5,7 @@
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
 
+from __future__ import print_function
 import sys
 import os
 import re
@@ -112,7 +113,7 @@ class UtteranceElement(etree.ElementBase):
         return  bool(sum([1 for child in self]))
 
     def pretty_print(self):    
-        print tostring(ElementTree(self), pretty_print=True)
+        print(tostring(ElementTree(self), pretty_print=True))
 
     def utterance(self):
         """Get the top-level utterance node of an ``UtteranceElement``."""
@@ -239,17 +240,17 @@ class Utterance(object):
             try:
                 self.data.set("utterance_name", get_basename(string))
             except ValueError:
-                print '---'
-                print string
-                print  get_basename(string)
-                print '---'
+                print('---')
+                print(string)
+                print(get_basename(string))
+                print('---')
                 sys.exit("Couldn't set utterance name")        
 
         elif data_type == 'str': 
             self.make_from_string(string, speech_file=speech_file)
 
         else:
-            print 'Data type %s for initialising utterance is unrecognised'%(data_type)
+            print('Data type %s for initialising utterance is unrecognised'%(data_type))
 
         ## reroute attributes from self.data -> self
         self.attrib = self.data.attrib
@@ -363,7 +364,7 @@ class Utterance(object):
         '''
         [Reroute to self.data]
         '''
-        print tostring(ElementTree(self.data), pretty_print=True)
+        print(tostring(ElementTree(self.data), pretty_print=True))
 
 
     def all_nodes(self):
@@ -459,7 +460,7 @@ class Utterance(object):
         highlight_ids = []
         if highlight_nodes:
             highlight_ids = [id(node) for node in highlight_nodes]
-            print highlight_ids
+            print(highlight_ids)
 
         ## Node names
         for node in node_list:
@@ -553,7 +554,7 @@ class Utterance(object):
         if len(targets)==0:
 #            sys.exit('Pattern %s matches no nodes of utterance %s'%(target_nodes, \
 #                                        get_basename(self.get_utterance_filename())))
-            print 'Warning: Pattern %s matches no nodes of utterance %s'%(target_nodes, get_basename(self.get_utterance_filename()))
+            print('Warning: Pattern %s matches no nodes of utterance %s'%(target_nodes, get_basename(self.get_utterance_filename())))
         features = []
         for node in targets:   
             if return_dict: ## keep keys and return as dict

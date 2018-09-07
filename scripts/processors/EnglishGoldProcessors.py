@@ -3,6 +3,7 @@
 ## Project: Simple4All - August 2014 - www.simple4all.org 
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
 
+from __future__ import print_function
 import sys
 import os
 import subprocess
@@ -59,7 +60,7 @@ class EnglishTextNormaliser(NodeEnricher):
         #     discard punctuation, but does this do additional useful things?
 
     def do_training(self, speech_corpus, text_corpus):
-        print "EnglishTextNormliser requires no training"    
+        print("EnglishTextNormliser requires no training")    
         
 
 
@@ -106,8 +107,8 @@ class BasicStanfordCoreNLP(UtteranceProcessor):
                     'ssplit.isOneSentence = true']
             writelist(data, corenlp_conf_file)
 
-        print 'Loading stanford corenlp modules from %s ...'%(corenlp_dir)
-        print 'Takes a while (~20-30 seconds)...'
+        print('Loading stanford corenlp modules from %s ...'%(corenlp_dir))
+        print('Takes a while (~20-30 seconds)...')
         self.models = StanfordCoreNLP(corenlp_dir, properties=corenlp_conf_name)     
                                            
 
@@ -278,7 +279,7 @@ class BasicStanfordCoreNLP(UtteranceProcessor):
             elif self.all_space_or_punc(full_POS):
                 red_pos = 'punc'
             else:
-                print 'MISSING POS: %s'%(full_POS)
+                print('MISSING POS: %s'%(full_POS))
                 red_pos = 'other'
         else:
             red_pos = map[full_POS]
@@ -369,7 +370,7 @@ class EnglishPostlexRules(UtteranceProcessor):
             if token.attrib['norm_text'].lower() == 'the':
                 vowel = token.xpath("descendant::segment[@vowel_cons='vowel']")
                 if len(vowel) != 1:
-                    print 'WARNING: weird number of vowels...' ## do nothing
+                    print('WARNING: weird number of vowels...') ## do nothing
                 else:
                     vowel = vowel[0]
                     following_type = token.xpath("./following::segment[1]/attribute::vowel_cons")

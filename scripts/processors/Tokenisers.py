@@ -5,6 +5,7 @@
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
 #from naive.naive_util import *
+from __future__ import print_function
 import unicodedata
 import glob
 from processors.UtteranceProcessor import SUtteranceProcessor, Element
@@ -12,6 +13,8 @@ from processors.UtteranceProcessor import SUtteranceProcessor, Element
 # from processors.NodeEnricher import *
 import datetime
 from naive import naive_util
+
+from lxml import etree
 
 try:
     import regex as new_regex
@@ -65,8 +68,8 @@ class RegexTokeniser(SUtteranceProcessor):
 
 
     def process_utterance(self, utt):
-
-        #print 'target nodes: %s'%(utt.xpath(self.target_nodes))
+        #print('target nodes: %s' % utt.xpath(self.target_nodes))
+        #   import pdb; pdb.set_trace()
         for node in utt.xpath(self.target_nodes):
             assert node.has_attribute(self.split_attribute)
             to_split = node.get(self.split_attribute)
@@ -75,13 +78,13 @@ class RegexTokeniser(SUtteranceProcessor):
             
             for chunk in child_chunks:
                 #print '=='
-                #print chunk
+                #print(chunk)
                 child = Element(self.child_node_type)
                 child.set(self.split_attribute, chunk)
 
                 if self.add_token_classes:
                     token_class = self.classify_token(chunk)
-                    #print token_class
+                    #print(token_class)
                     child.set(self.class_attribute, token_class)
 
                 if self.add_safetext:
@@ -120,7 +123,7 @@ class RegexTokeniser(SUtteranceProcessor):
         return tokens 
         
     def do_training(self, speech_corpus, text_corpus):
-        print "RegexTokeniser requires no training"    
+        print("RegexTokeniser requires no training")    
 
 
 '''

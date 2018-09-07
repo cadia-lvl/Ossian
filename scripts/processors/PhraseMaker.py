@@ -5,6 +5,7 @@
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
 
+from __future__ import absolute_import
 from UtteranceProcessor import SUtteranceProcessor
 from util.NodeProcessors import add_phrase_tags, restructure
 

@@ -4,20 +4,22 @@
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
+from __future__ import print_function
+from __future__ import absolute_import
 import os
 import sys
 from shutil import ignore_patterns, copytree, rmtree
 import glob
 
 from naive.naive_util import *
-from Utterance import *
+from .Utterance import *
 from processors.UtteranceProcessor import *
-from Corpus import *
+from .Corpus import *
 
 import default.fnames as fname
 import default.const as const
 
-from Resources import *
+from .Resources import *
 import default.const as c
 
 import multiprocessing
@@ -54,8 +56,8 @@ class Voice(object):
         voice_dir = self.res.path[c.VOICE]
         train_proc = os.path.join(train_dir, const.PROCESSOR)
         
-        print train_dir
-        print voice_dir
+        print(train_dir)
+        print(voice_dir)
 
         if not os.path.isdir(train_proc):
             os.makedirs(train_proc)
@@ -86,20 +88,21 @@ class Voice(object):
         
 
 
-        print 'try loading config from python...'
-        print load_from_file
+        print('try loading config from python...')
+        print(load_from_file)
 
         self.config = {}
-        execfile(load_from_file, self.config)
+        # execfile(load_from_file, self.config)
+        with open(load_from_file) as f: exec(f.read(), self.config)
         del self.config['__builtins__']
-        print self.config
+        print(self.config)
         # main_work(config)
 
 
-        print self.run_mode
+        print(self.run_mode)
         ## Check run mode is ok (TODO: assert run_mode isn't "train" if self.trained?):
-        if not self.run_mode or not self.config.has_key(self.run_mode + '_stages'):
-            print "ERROR: called with mode '%s', but '%s_stages' is not defined in the config file."%(self.run_mode,self.run_mode)
+        if not self.run_mode or self.run_mode + '_stages' not in self.config:
+            print("ERROR: called with mode '%s', but '%s_stages' is not defined in the config file."%(self.run_mode,self.run_mode))
             sys.exit(1)
         
 
@@ -255,7 +258,7 @@ class Voice(object):
         if self.make_archive:
             utt.archive()
         for processor in self.processors:
-            print "\n==  proc no. %s (%s)  =="%(i, processor.processor_name)
+            print("\n==  proc no. %s (%s)  =="%(i, processor.processor_name))
             #print " == Before:"
             #utt.pretty_print()
             processor.apply_to_utt(utt, voice_mode=self.run_mode)  ## utt is changed in place
@@ -269,7 +272,7 @@ class Voice(object):
         ## Save wave to named file?
         if output_wavefile:
             if not utt.has_external_data("wav"):
-                print "Warning: no wave produced for this utt"
+                print("Warning: no wave produced for this utt")
             else:
                 temp_wave = utt.get_filename("wav")  
 
@@ -279,7 +282,7 @@ class Voice(object):
                     
         if output_labfile:
             if not utt.has_external_data("lab"):
-                print "Warning: no lab produced for this utt"
+                print("Warning: no lab produced for this utt")
             else:
                 temp_lab = utt.get_filename("lab")            
                 shutil.copyfile(temp_lab, output_labfile) 
@@ -287,7 +290,7 @@ class Voice(object):
         if output_extensions != []:
             for ext in output_extensions:
                 if not utt.has_external_data(ext):
-                    print "Warning: no %s produced for this utt"%(ext)
+                    print("Warning: no %s produced for this utt"%(ext))
                 else:
                     assert output_wavefile
                     output_file = re.sub('wav\Z', ext, output_wavefile)
@@ -342,18 +345,18 @@ class Voice(object):
             #print processor
             #print dir(processor)
             #print type(processor)
-            print "\n\n== Train voice (proc no. %s (%s))  =="%(i, processor.processor_name)
+            print("\n\n== Train voice (proc no. %s (%s))  =="%(i, processor.processor_name))
 
             if not processor.trained:  
                 ## has a suitable component already been trained?
                 if os.path.isdir(processor.component_path):
-                    print "Copy existing component for processor " + processor.processor_name                    
+                    print("Copy existing component for processor " + processor.processor_name)                    
                     processor.reuse_component(self.res)
                 else:
-                    print "Train processor " + processor.processor_name
+                    print("Train processor " + processor.processor_name)
                     processor.train(speech_corpus, text_corpus)
                         
-            print "          Applying processor " + processor.processor_name
+            print("          Applying processor " + processor.processor_name)
             if self.max_cores > 1: pool = multiprocessing.Manager().Pool(self.max_cores)
             for utterance_file in speech_corpus:                
                 if self.max_cores > 1 and processor.parallelisable:

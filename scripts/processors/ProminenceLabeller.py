@@ -3,10 +3,12 @@
 
 
 
+from __future__ import print_function
+from __future__ import absolute_import
 import numpy as np
 import os.path
 
-from UtteranceProcessor import *
+from .UtteranceProcessor import *
 from scipy import signal
 
 from collections import OrderedDict, defaultdict
@@ -95,7 +97,7 @@ class ProminenceLabeller(UtteranceProcessor):
                 feat_dir = self.voice_resources.get_filename(self.param_dir, c.TRAIN)
                 fname=feat_dir+"/"+utt.get("utterance_name")+"."+f
                 if not os.path.isfile(fname):
-                    print "acoustic feature file "+fname+" not found"
+                    print("acoustic feature file "+fname+" not found")
                     sys.exit(1)
                     
                 feat_type = f
@@ -281,5 +283,5 @@ class ProminenceLabeller(UtteranceProcessor):
         for f in self.feats:
             self.variances[f] /= utt_i
         
-        print self.variances
+        print(self.variances)
         

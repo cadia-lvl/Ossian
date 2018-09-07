@@ -16,6 +16,7 @@
 ## -- handle lines independently with padding_token
 ## -- option to normalise left and right count vectors
 
+from __future__ import print_function
 import sys
 import os
 import codecs
@@ -61,7 +62,7 @@ def main_work():
 
 def read_text_corpus_to_triplets(fname, nwords=float('inf')):
     with codecs.open(fname, 'r', encoding='utf-8') as f: 
-        for line in f.xreadlines():
+        for line in f:
             line = line.strip("\n ")
             line = line.split(" ")
             for triplet in zip([padding_token] + line[:-1], line, line[1:] + [padding_token]):
@@ -86,7 +87,7 @@ def train_static_vsm(textfile_in, stored_model, w, rank, unseen_threshold, svd_t
     ## 1) FIRST PASS -- COUNTING
     ## ------------------------------------------------
 
-    print 'Count types...'
+    print('Count types...')
 
     ## get target words, sorted by descending frequency
     ## count wordtypes:
@@ -114,7 +115,7 @@ def train_static_vsm(textfile_in, stored_model, w, rank, unseen_threshold, svd_t
     ## 2) SECOND PASS -- MAKE COOCC. MATRIX C
     ## ------------------------------------------------
 
-    print 'Assemble cooccurance matrix...'
+    print('Assemble cooccurance matrix...')
     
     n = len(feature_words)
     m = len(target_words)
@@ -162,7 +163,7 @@ def train_static_vsm(textfile_in, stored_model, w, rank, unseen_threshold, svd_t
     ## 3) FACTORISATION
     ## ------------------------------------------------
     
-    print 'Factorise cooccurance matrix...'
+    print('Factorise cooccurance matrix...')
 
     if svd_type == 'exact':
         U,D,V = numpy_svd(C, full_matrices=False)
@@ -192,7 +193,7 @@ def train_static_vsm(textfile_in, stored_model, w, rank, unseen_threshold, svd_t
     ## 4) WRITE OUTPUT:
     ## ------------------------------------------------
     stored_model += '.table'  ## TODO: historical -- clean this up. 
-    print 'Write output to %s'%(stored_model)
+    print('Write output to %s'%(stored_model))
     f = codecs.open(stored_model, 'w')
     for (lemma, feats) in zip(target_words, transformed_C):
         line =  [lemma] + [str(val) for val in feats]

@@ -5,6 +5,7 @@
 Provides a connection to the compound database
 
 """
+from __future__ import print_function
 
 import sqlite3
 

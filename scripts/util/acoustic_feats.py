@@ -1,7 +1,8 @@
+from __future__ import absolute_import
 import numpy as np
 import sys
 
-from speech_manip import spline_smooth_fzero
+from .speech_manip import spline_smooth_fzero
 
 # gaussian type smoothing, convolution with hamming window
 def _smooth(params, win, type="HAMMING"):

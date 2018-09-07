@@ -5,8 +5,10 @@
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
 
+from __future__ import print_function
+from __future__ import absolute_import
 import tempfile 
-from UtteranceProcessor import *
+from .UtteranceProcessor import *
 import util.NodeProcessors
 import logging
 
@@ -37,7 +39,7 @@ class GenericProcessor(UtteranceProcessor):
 
 
     def do_training(self, speech_corpus, text_corpus):
-        print 'GenericProcessor requires no training'
+        print('GenericProcessor requires no training')
         return
 
 

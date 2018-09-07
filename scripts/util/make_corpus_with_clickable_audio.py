@@ -11,6 +11,7 @@
 [dyatlov]owatts: python scripts/util/make_corpus_with_clickable_audio.py ./train/sw/speakers/pm_balanced/naive_01_nn/utt/ ./train/sw/speakers/pm_balanced/naive_01_nn/clickable_audio
 
 '''
+from __future__ import print_function
 import os
 import sys
 import glob
@@ -54,7 +55,7 @@ def proc_utt(uttfile):
 
     path, base = os.path.split(uttfile)
     base = base.replace('.utt', '')
-    print base
+    print(base)
     utt = etree.parse(uttfile)
     wavfile = utt.getroot().attrib['waveform']
     i = 1
@@ -134,8 +135,8 @@ for html_line in html_lines:
 f.close()
 
 
-print 
-print 
-print 'Please view ' + outdir + '/text.html in chrome -- safari does not support a script it uses'
-print 
-print 
+print() 
+print() 
+print('Please view ' + outdir + '/text.html in chrome -- safari does not support a script it uses')
+print() 
+print() 

@@ -3,6 +3,7 @@
 ## Project: Natural Speech Technology - February 2015 - www.natural-speech-technology.org
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
   
+from __future__ import print_function
 import sys
 import os
 import struct
@@ -50,7 +51,7 @@ def main_work():
         data = get_speech(cmp, total_dim, remove_htk_header=True)
         start = 0
         #print '========'
-        print base 
+        print(base) 
         for (stream, width) in zip(streams, widths):
             #print '   ' + stream
             outfile = os.path.join(opts.outdir, stream, base + '.' + stream)

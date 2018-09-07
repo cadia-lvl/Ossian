@@ -6,6 +6,8 @@
 
 
 
+from __future__ import print_function
+from __future__ import absolute_import
 from UtteranceProcessor import SUtteranceProcessor
 from util.NodeProcessors import *
 
@@ -164,15 +166,15 @@ class NNAcousticModel(NN):
         self.stream_std = self.split_into_streams(std)
 
     def get_silent_feature_indices(self, question_file_name, silence_pattern):
-        print 'get_silent_feature_indices'
+        print('get_silent_feature_indices')
         indices = []
         questions = [q for q in readlist(question_file_name) if q != '']
         questions = [q for q in questions if 'CQS' not in q]
         for (i, question) in enumerate(questions):
             if silence_pattern in question:
                 indices.append(i)
-                print 'silence question found:'
-                print question
+                print('silence question found:')
+                print(question)
         return indices
 
     def load_stream_info(self):
@@ -226,7 +228,7 @@ class NNAcousticModel(NN):
 
         if enforce_silence:
             for (stream, data) in streams.items():
-                print input[:, self.silent_feature_indices]
+                print(input[:, self.silent_feature_indices])
                 sys.exit('ntfbdfbsfrbsfbr')
                 silent_frames = numpy.sum(input[:, self.silent_feature_indices], axis=1)
                 data[silent_frames == 1.0, :] = 0.0
@@ -325,7 +327,7 @@ class NNAcousticModel(NN):
         outputs = {}
         for stream in self.outstreams:
             end = start + self.outdims[stream]
-            print stream
+            print(stream)
             outputs[stream] = input[:, start:end]
             start = end
 
@@ -513,11 +515,11 @@ class NNDurationPredictor(SUtteranceProcessor):
     def do_training(self, speech_corpus, text_corpus):
 
         if self.trained:
-            print 'NNDurationPredictor already trained'
+            print('NNDurationPredictor already trained')
             return
 
-        print 'Training of NNDurationPredictor itself not supported within Ossian -- '
-        print 'use Merlin to train on the prepared data'
+        print('Training of NNDurationPredictor itself not supported within Ossian -- ')
+        print('use Merlin to train on the prepared data')
         if not os.path.isdir(self.model_dir):
             os.makedirs(self.model_dir)
 
@@ -591,20 +593,20 @@ class NNDurationPredictor(SUtteranceProcessor):
                                  self.voice_resources.speaker, self.voice_resources.configuration, \
                                  'processors', self.processor_name)
 
-        print '------------'
-        print 'Wrote config file to: '
-        print conf_file
-        print 'Edit this config file as appropriate and use for training with Merlin.'
-        print 'In particular, you will want to increase training_epochs to train real voices'
-        print 'You will also want to experiment with learning_rate, batch_size, hidden_layer_size, hidden_layer_type'
-        print
-        print 'To train with Merlin and then store the resulting model in a format suitable for Ossian, please do:'
-        print
-        print 'cd %s' % (ossian_root)
-        print 'export THEANO_FLAGS=""; python ./tools/merlin/src/run_merlin.py %s' % (conf_file)
-        print 'python ./scripts/util/store_merlin_model.py %s %s' % (conf_file, voice_dir)
-        print
-        print '------------'
+        print('------------')
+        print('Wrote config file to: ')
+        print(conf_file)
+        print('Edit this config file as appropriate and use for training with Merlin.')
+        print('In particular, you will want to increase training_epochs to train real voices')
+        print('You will also want to experiment with learning_rate, batch_size, hidden_layer_size, hidden_layer_type')
+        print()
+        print('To train with Merlin and then store the resulting model in a format suitable for Ossian, please do:')
+        print()
+        print('cd %s' % (ossian_root))
+        print('export THEANO_FLAGS=""; python ./tools/merlin/src/run_merlin.py %s' % (conf_file))
+        print('python ./scripts/util/store_merlin_model.py %s %s' % (conf_file, voice_dir))
+        print()
+        print('------------')
 
     def process_utterance(self, utt):
         if utt.has_attribute("waveform"):
@@ -683,8 +685,8 @@ class NNAcousticPredictor(SUtteranceProcessor):
 
     def do_training(self, speech_corpus, text_corpus):
 
-        print 'Training of NNAcousticPredictor itself not supported within Ossian -- '
-        print 'use Merlin to train on the prepared data'
+        print('Training of NNAcousticPredictor itself not supported within Ossian -- ')
+        print('use Merlin to train on the prepared data')
         if not os.path.isdir(self.model_dir):
             os.makedirs(self.model_dir)
 
@@ -758,20 +760,20 @@ class NNAcousticPredictor(SUtteranceProcessor):
                                  self.voice_resources.speaker, self.voice_resources.configuration, \
                                  'processors', self.processor_name)
 
-        print '------------'
-        print 'Wrote config file to: '
-        print conf_file
-        print 'Edit this config file as appropriate and use for training with Merlin.'
-        print 'In particular, you will want to increase training_epochs to train real voices'
-        print 'You will also want to experiment with learning_rate, batch_size, hidden_layer_size, hidden_layer_type'
-        print
-        print 'To train with Merlin and then store the resulting model in a format suitable for Ossian, please do:'
-        print
-        print 'cd %s' % (ossian_root)
-        print 'export THEANO_FLAGS='' ; python ./tools/merlin/src/run_merlin.py %s' % (conf_file)
-        print 'python ./scripts/util/store_merlin_model.py %s %s' % (conf_file, voice_dir)
-        print
-        print '------------'
+        print('------------')
+        print('Wrote config file to: ')
+        print(conf_file)
+        print('Edit this config file as appropriate and use for training with Merlin.')
+        print('In particular, you will want to increase training_epochs to train real voices')
+        print('You will also want to experiment with learning_rate, batch_size, hidden_layer_size, hidden_layer_type')
+        print()
+        print('To train with Merlin and then store the resulting model in a format suitable for Ossian, please do:')
+        print()
+        print('cd %s' % (ossian_root))
+        print('export THEANO_FLAGS='' ; python ./tools/merlin/src/run_merlin.py %s' % (conf_file))
+        print('python ./scripts/util/store_merlin_model.py %s %s' % (conf_file, voice_dir))
+        print()
+        print('------------')
 
     def process_utterance(self, utt):
         if utt.has_attribute("waveform"):
@@ -810,12 +812,12 @@ class NNAcousticPredictor(SUtteranceProcessor):
         for (stream, data) in streams.items():
             put_speech(data, '/tmp/tmp.%s' % (stream))
             comm = bin_dir + "/x2x +fd /tmp/tmp." + stream + " >/tmp/tmp_d." + stream
-            print comm
+            print(comm)
             os.system(comm)
 
         comm = "%s/mgc2sp -a %s -g 0 -m %s -l %s -o 2 /tmp/tmp.mgc | %s/sopr -d 32768.0 -P | %s/x2x +fd -o > /tmp/tmp.spec" % (
         bin_dir, alpha, order, fftl, bin_dir, bin_dir)
-        print comm
+        print(comm)
         os.system(comm)
 
         '''Avoid:   x2x : error: input data is over the range of type 'double'!
@@ -825,11 +827,11 @@ class NNAcousticPredictor(SUtteranceProcessor):
         '''
 
         comm = "%s/synth %s %s /tmp/tmp_d.lf0 /tmp/tmp.spec /tmp/tmp_d.bap /tmp/tmp.resyn.wav" % (bin_dir, fftl, sr)
-        print comm
+        print(comm)
         os.system(comm)
 
         os.system("mv /tmp/tmp.resyn.wav " + outfile)
-        print 'Produced %s' % (outfile)
+        print('Produced %s' % (outfile))
 
 
 def fill_short_unvoiced_gaps(track, gaplength):
@@ -864,14 +866,14 @@ def wavelet_manipulation(sequence, std_scaling_factors, scale_distance=0.5, num_
 
     wavelet_matrix = util.cwt_utils.scale_for_reconstruction(wavelet_matrix.getdata(), dj, s0)
 
-    print 'aevbaoivaobdeiv'
-    print np.shape(wavelet_matrix)
+    print('aevbaoivaobdeiv')
+    print(np.shape(wavelet_matrix))
 
     # wavelet_matrix = wavelet_matrix.getdata()
 
 
     scales = np.transpose(wavelet_matrix)
-    print np.shape(scales)
+    print(np.shape(scales))
 
     (m, n) = np.shape(scales)
     assert len(std_scaling_factors) == n, 'need one std scaling factor for each of %s wavelet scales' % (n)
@@ -882,9 +884,9 @@ def wavelet_manipulation(sequence, std_scaling_factors, scale_distance=0.5, num_
     stds = np.maximum(stds, 0.0000001)  ## floor to avoid div by 0 problems
 
     norm_scales = (scales - means) / stds
-    print np.shape(norm_scales)
-    print np.mean(norm_scales, axis=0)
-    print np.std(norm_scales, axis=0)
+    print(np.shape(norm_scales))
+    print(np.mean(norm_scales, axis=0))
+    print(np.std(norm_scales, axis=0))
 
     #    norm_scales *= np.array(std_scaling_factors)
 

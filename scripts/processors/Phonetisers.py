@@ -3,6 +3,7 @@
 ## Project: Ossian - May 2017  
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
 
+from __future__ import print_function
 from processors.UtteranceProcessor import SUtteranceProcessor, Element
 from naive import naive_util
 import default.const as c
@@ -78,6 +79,6 @@ class NaivePhonetiser(SUtteranceProcessor):
         return safetext_letters
 
     def do_training(self, speech_corpus, text_corpus):
-        print "NaivePhonetiser requires no training"    
+        print("NaivePhonetiser requires no training")    
 
 

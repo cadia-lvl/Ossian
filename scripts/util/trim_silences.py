@@ -12,6 +12,8 @@
 
 
 
+from __future__ import print_function
+from __future__ import absolute_import
 import sys
 import re
 import os
@@ -19,7 +21,7 @@ from glob import glob
 
 from argparse import ArgumentParser
 
-from draw_hts_tree_simple import parse_treefile_general, treelist_to_dict, add_leaf_entries
+from .draw_hts_tree_simple import parse_treefile_general, treelist_to_dict, add_leaf_entries
 
 ## ~/my_python ./scripts/util/trim_silences.py  -inlab train/rm/speakers/SSW13/naive/lab/ -inwav corpus//rm/speakers/SSW13/wav/ -outlab train/rm/speakers/SSW13/naive/trim_lab/ -outwav train/rm/speakers/SSW13/naive/trim_wav/
 
@@ -56,7 +58,7 @@ def main_work():
     for lab in glob(opts.inlab + "/*.lab"):
 
         base = os.path.basename(lab)
-        print base
+        print(base)
         label = readlab(lab)
         ## first and last sils:
         old_start = 0

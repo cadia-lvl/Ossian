@@ -7,6 +7,8 @@
 # from naive.naive_util import *
 # from VoiceElements import ConfiguredComponent
 
+from __future__ import print_function
+from __future__ import absolute_import
 import os
 import sys
 import re
@@ -90,6 +92,7 @@ class Lexicon(SUtteranceProcessor):
                                # Specific stuff would be the names of component of trained model.
         self.trained = True
         self.model_dir = os.path.join(self.get_location())  ## TODO = self.get_location() ? 
+        # dict_location = os.path.join(self.voice_resources.path[c.LANG], 'labelled_corpora', self.dictionary)
 
         if not os.path.isdir(self.model_dir):
             self.trained = False
@@ -100,7 +103,8 @@ class Lexicon(SUtteranceProcessor):
         self.phoneset_fname = os.path.join(self.model_dir, 'phones.table')
         self.onsets_fname = os.path.join(self.model_dir, 'onsets.txt')
         self.letter_fname = os.path.join(self.model_dir, 'letter.names')
-        
+        #self.letter_fname = os.path.join(dict_location, 'letter.names')
+
         complete = True
         for component in [self.lexicon_fname, self.lts_fname, self.phoneset_fname, \
                                                     self.onsets_fname, self.letter_fname]:
@@ -118,7 +122,7 @@ class Lexicon(SUtteranceProcessor):
 #         
         extra_lex = os.path.join(self.model_dir, 'extra_lex.txt')
         if os.path.isfile(extra_lex):
-            print '    extra exists --> loading it!'
+            print('    extra exists --> loading it!')
             self.load_extra_lexicon(extra_lex)
         
         ## Add locations for sequitur g2p to pythonpath:
@@ -144,7 +148,7 @@ class Lexicon(SUtteranceProcessor):
 
     def convert_lexicon(self, files, format='festival'):
         
-        print '     convert lexicon...'
+        print('     convert lexicon...')
         entries = {}
         seen_tags = {}  ## for reporting
         if format=='festival':
@@ -162,8 +166,8 @@ class Lexicon(SUtteranceProcessor):
         else:
             sys.exit('Unknown lexicon format: %s'%(format))
         
-        print 'Tags in lexicon: ' 
-        print seen_tags.keys()
+        print('Tags in lexicon: ') 
+        print(seen_tags.keys())
         
         f = codecs.open(self.lexicon_fname, 'w', encoding='utf8')
         for head_word in sorted(entries.keys()):
@@ -253,7 +257,7 @@ class Lexicon(SUtteranceProcessor):
                 ## filter ambiguous pronunciations by first part of tag (POS):
                 ## if there *is* no POS, take first in list:
                 if not part_of_speech: 
-                    print 'WARNING: no pos tag to disambiguate pronunciation of "%s" -- take first entry in lexicon'%(word)
+                    print('WARNING: no pos tag to disambiguate pronunciation of "%s" -- take first entry in lexicon'%(word))
                     tag, pronunciation = self.entries[word][0] #take first
                 else:
                     wordpos = part_of_speech.lower() # node.attrib['pos']
@@ -279,7 +283,7 @@ class Lexicon(SUtteranceProcessor):
         return (pronunciation, method)
             
     def count_onsets_and_codas(self):
-        print '     count onsets and codas...'
+        print('     count onsets and codas...')
         onsets = {}
         codas = {}
         for (entry, prons) in self.entries.items():
@@ -294,10 +298,10 @@ class Lexicon(SUtteranceProcessor):
                     vowel_index = [i for (i,phone) in enumerate(phones) \
                             if self.phoneset.lookup(phone, field='vowel_cons')=='vowel']
                     if len(vowel_index) > 1:
-                        print 'Multiple vowels found in syll %s in an entry for %s'%(syll, entry)
+                        print('Multiple vowels found in syll %s in an entry for %s'%(syll, entry))
                         continue
                     if len(vowel_index) < 1:
-                        print 'No vowels found in syll %s in an entry for %s'%(syll, entry)
+                        print('No vowels found in syll %s in an entry for %s'%(syll, entry))
                         continue
                     i = vowel_index[0]
                     onset = tuple(phones[:i])
@@ -428,25 +432,25 @@ class Lexicon(SUtteranceProcessor):
         for line in lines:
             f.write(line)
         f.close()
-        print 'Wrote %s'%(train_file)
+        print('Wrote %s'%(train_file))
         
     def train_sequitur_g2p(self, train_file):
         '''Currently use system call -- TODO: keep this all in python?'''
 
         lts_model = self.lts_fname
-        print 'Training LTS with sequitur...'
+        print('Training LTS with sequitur...')
         ## train unigram model:
         n = 1
         comm = '%s %s --train %s -s 1,%s,1,%s --devel 5%% --encoding utf8 --write-model %s_%s > %s.log'%(self.g2p_path, \
                             self.lts_tool, train_file, self.max_graphone_letters, \
                             self.max_graphone_phones, lts_model, n, lts_model)
-        print comm
+        print(comm)
         os.system(comm)
         n += 1
         while n <= self.lts_gram_length:
             comm = '%s %s --model %s_%s --ramp-up --train %s --devel 5%% --encoding utf8 --write-model %s_%s >> %s.log'%(
                           self.g2p_path, self.lts_tool, lts_model, n-1, train_file, lts_model, n, lts_model)
-            print comm
+            print(comm)
             os.system(comm)  
             n += 1
         shutil.copy('%s_%s'%(lts_model, self.lts_gram_length), lts_model)
@@ -468,8 +472,8 @@ class Lexicon(SUtteranceProcessor):
         
         pronun = subprocess.check_output(comm, shell=True, stderr=subprocess.STDOUT)
         if 'failed to convert' in pronun:
-            print comm
-            print 'WARNING: couldnt run LTS for %s'%(word)
+            print(comm)
+            print('WARNING: couldnt run LTS for %s'%(word))
             
         
         ## remove the 'stack usage' output line -- its position varies:
@@ -477,7 +481,7 @@ class Lexicon(SUtteranceProcessor):
                             ## ^----- 2015-11-4: moved this line back from c.440 
                             
         pronun = pronun.strip(' \n').split('\n')
-        print pronun
+        print(pronun)
         
         ## deal with this, but TODO: work out long-term solution --
         assert len(pronun) >= 2,str(pronun)     ## ==   -->   >=     to handle extra warnings
@@ -526,11 +530,11 @@ class Lexicon(SUtteranceProcessor):
             print(e.output.encode('utf-8'))
             return None
 
-        print 'SUCCESS!'
+        print('SUCCESS!')
 
-        if 'failed to convert' in pronun:
-            print comm
-            print 'WARNING: couldnt run LTS for %s'%(word)
+        if b'failed to convert' in pronun:
+            print(comm)
+            print('WARNING: couldnt run LTS for %s'%(word))
             return None
         
         ## remove the 'stack usage' output line -- its position varies:
@@ -548,8 +552,8 @@ class Lexicon(SUtteranceProcessor):
         ## deal with this, but TODO: work out long-term solution --
         print(word)
         assert len(pronun) >= 2,str(pronun)     ## ==   -->   >=     to handle extra warnings
-        if type(word) == str:
-            word = word.decode('utf-8')
+        #if type(word) == str:
+           # word = word.decode('utf-8')
         normalised_word = unicodedata.normalize('NFKD', word) 
         for line in pronun:
             if 'stack usage' not in line and normalised_word in line:   ## word in line   added to reject warnings
@@ -558,8 +562,8 @@ class Lexicon(SUtteranceProcessor):
         (outword, pronun) = re.split('\s+', pronun, maxsplit=1)
         outword = unicodedata.normalize('NFKD', outword)
 #        word = unicodedata.normalize('NFKD', word.decode('utf-8'))
-        if type(word) == str:
-            word = word.decode('utf-8')
+        #if type(word) == str:
+            #word = word.decode('utf-8')
         word = unicodedata.normalize('NFKD', word)
 
             
@@ -650,9 +654,9 @@ class SyllStressAdder(NodeEnricher):
         stress_marks = re.findall('\d+', input)
         stress_marks = [int(mark) for mark in stress_marks]
         if len(stress_marks) > 1:
-            print 'Warning: multiple stress marks for syllable %s'%(input)
+            print('Warning: multiple stress marks for syllable %s'%(input))
         if len(stress_marks) < 1:
-            print 'Warning: no stress marks for syllable %s'%(input)
+            print('Warning: no stress marks for syllable %s'%(input))
         ## add string prefix so feature is treated as categorical:
         return 'stress_' + str(max(stress_marks + [0]))
 
@@ -821,7 +825,7 @@ class SimpleIndicG2P(Lexicon):
     def do_training(self, corpus, text_corpus):
 
         assert os.path.isfile(self.lts_fname)
-        print 'no training currently required -- lex and lts should be prepared externally'
+        print('no training currently required -- lex and lts should be prepared externally')
 
     def get_oov_pronunciation(self, word):
 
@@ -846,8 +850,8 @@ class SimpleIndicG2P(Lexicon):
         try:
             pronun = subprocess.check_output(comm, shell=True, stderr=subprocess.STDOUT)
             if 'failed to convert' in pronun:
-                print comm
-                print 'WARNING: couldnt run LTS for %s'%(word)
+                print(comm)
+                print('WARNING: couldnt run LTS for %s'%(word))
                 return None
         except:
             return None
@@ -877,7 +881,7 @@ class SimpleIndicG2P(Lexicon):
             
         assert outword == word,'don\'t match: %s and %s'%(outword, word)
                     ## sequitur seems to return decomposed forms 
-        print g2p_input + ' -->  ' + pronun
+        print(g2p_input + ' -->  ' + pronun)
         return pronun
 
 class LexiconWithOOVVariants(Lexicon):
@@ -893,8 +897,8 @@ class LexiconWithOOVVariants(Lexicon):
     
         pronun = subprocess.check_output(comm, shell=True, stderr=subprocess.STDOUT)
         if 'failed to convert' in pronun:
-            print comm
-            print 'WARNING: couldnt run LTS for %s'%(word)
+            print(comm)
+            print('WARNING: couldnt run LTS for %s'%(word))
             return None
         
         ## remove the 'stack usage' output line -- its position varies:
@@ -934,4 +938,4 @@ if __name__=="__main__":
 
     
 
-    print get_spans_on_one_level('("checkpoints" nil (((ch eh k) 1) ((p oy n t s) 1)))')
+    print(get_spans_on_one_level('("checkpoints" nil (((ch eh k) 1) ((p oy n t s) 1)))'))

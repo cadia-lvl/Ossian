@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+from __future__ import absolute_import
 from lvl.dict_database import comp_dict_db
 from lvl.dict_database import pron_dict_db
-import entry
+from . import entry
 
 
 VOWELS = [u'a', u'á', u'e', u'é', u'i', u'í', u'o', u'ó', u'u', u'ú', u'y', u'ý', u'ö']

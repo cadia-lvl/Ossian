@@ -13,10 +13,12 @@ The results of the look up can be:
 Collects statistics about the three categories.
 
 """
+from __future__ import print_function
+from __future__ import absolute_import
 
 import sys
 import sqlite3
-import entry
+from . import entry
 
 #statistics
 NONE = 0

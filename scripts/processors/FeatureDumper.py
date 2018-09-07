@@ -4,6 +4,8 @@
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
+from __future__ import print_function
+from __future__ import absolute_import
 import os
 import string
 from UtteranceProcessor import SUtteranceProcessor
@@ -81,7 +83,7 @@ class FeatureDumper(SUtteranceProcessor):
         utt_data = []
         
         utt_questions = defaultdict(int)  ## {}
-
+	
         nodelist = utt.xpath(self.target_nodes)
         if nodelist == []:            
             print('WARNING: FeatureDumper\'s target_nodes matches no nodes: %s'%(self.config["target_nodes"]))
@@ -168,8 +170,10 @@ class FeatureDumper(SUtteranceProcessor):
 
             if not (start_time=="_NA_" or end_time=="_NA_"):
 
-                start_time = string.ljust(str(ms_to_htk(start_time)), 10)
-                end_time = string.ljust(str(ms_to_htk(end_time)), 10)
+                #start_time = string.ljust(str(ms_to_htk(start_time)), 10)
+                #end_time = string.ljust(str(ms_to_htk(end_time)), 10)
+                start_time = str(ms_to_htk(start_time)).ljust(10)
+                end_time = str(ms_to_htk(end_time)).ljust(10) 
 
                 formatted_context_vector = "%s %s %s"%(start_time, end_time, formatted_context_vector)        
         return (formatted_context_vector, node_questions)
@@ -228,12 +232,12 @@ class FeatureDumper(SUtteranceProcessor):
                     cont_qlist.append("QS %s_is_%s {*/%s:%s/*}"%(name, value, number, value))
                 values_list.append((number, name, 'CATEGORICAL', ' '.join(values)))
 
-            elif all_entries_of_type(values, unicode):
+            # elif all_entries_of_type(values, unicode):
                 ## For strings, make single question for each item, no groups:
-                for value in values:
-                    qlist.append("QS %s_is_%s {*/%s:%s/*}"%(name, value, number, value))
-                    cont_qlist.append("QS %s_is_%s {*/%s:%s/*}"%(name, value, number, value))
-                values_list.append((number, name, 'CATEGORICAL', ' '.join(values)))
+                #for value in values:
+                    #qlist.append("QS %s_is_%s {*/%s:%s/*}"%(name, value, number, value))
+                    #cont_qlist.append("QS %s_is_%s {*/%s:%s/*}"%(name, value, number, value))
+                #values_list.append((number, name, 'CATEGORICAL', ' '.join(values)))
                                   
             elif all_entries_of_type(values, int):
                 ## For integers, make single question for each item, and also groups 
@@ -270,8 +274,8 @@ class FeatureDumper(SUtteranceProcessor):
 
             
             else:
-                print "Feature values of mixed type / not string or int:"
-                print values
+                print("Feature values of mixed type / not string or int:")
+                print(values)
                 sys.exit(1)
     
                     
@@ -385,8 +389,8 @@ class FeatureDumper(SUtteranceProcessor):
         self.question_file_path = self.voice_resources.get_filename(self.question_file, c.TRAIN)
 
         if os.path.isfile(self.question_file_path):  
-            print 'FeatureDumper already trained -- questions exist:'
-            print self.question_file_path
+            print('FeatureDumper already trained -- questions exist:')
+            print(self.question_file_path)
             return
      
         corpus_questions = defaultdict(int) ## {} ## store questions as keys to unique them
@@ -539,8 +543,8 @@ class MappedFeatureDumper(FeatureDumper):
         self.question_file_path = self.voice_resources.get_filename(self.question_file, c.TRAIN)
 
         if os.path.isfile(self.question_file_path):  
-            print 'FeatureDumper already trained -- questions exist:'
-            print self.question_file_path
+            print('FeatureDumper already trained -- questions exist:')
+            print(self.question_file_path)
             return
        
         self.make_simple_continuous_questions(self.question_file_path)

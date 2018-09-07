@@ -8,10 +8,12 @@
 These are mainly one-use things which I found useful in specific cases. Often hardcoded
 and not configurable...
 '''
+from __future__ import print_function
+from __future__ import absolute_import
 import codecs
 
-from UtteranceProcessor import *
-from NodeEnricher import NodeEnricher, AttributeAdder
+from .UtteranceProcessor import *
+from .NodeEnricher import NodeEnricher, AttributeAdder
 
 class TextPrinter(UtteranceProcessor):
 
@@ -49,7 +51,7 @@ class TextPrinter(UtteranceProcessor):
         f.close()
                  
     def do_training(self, speech_corpus, text_corpus):
-        print 'TextPrinter requires no training'
+        print('TextPrinter requires no training')
         return
 
 

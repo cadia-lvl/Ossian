@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+from __future__ import absolute_import
 import re
 import os
 import default.const as c
@@ -43,7 +45,7 @@ class LexiconLVL(Lexicon):
         self.comp_analyzer = tree_builder.CompoundAnalyzer(db_location + '/dictionary.db')
 
     def needs_letter_pronunciation(self, word):
-        letter_patt = ur'[a-záðéóúýþæö]'
+        letter_patt = r'[a-záðéóúýþæö]'
         if len(word) == 1 and re.match(letter_patt, word):
             return True
         initialism_patt = 'ur\A([a-záðéóúýþæö]\.)+\Z'
@@ -67,8 +69,8 @@ class LexiconLVL(Lexicon):
                 ## filter ambiguous pronunciations by first part of tag (POS):
                 ## if there *is* no POS, take first in list:
                 if not part_of_speech:
-                    print 'WARNING: no pos tag to disambiguate pronunciation of "%s" -- take first entry in lexicon' % (
-                        word)
+                    print('WARNING: no pos tag to disambiguate pronunciation of "%s" -- take first entry in lexicon' % (
+                        word))
                     tag, pronunciation = self.entries[word][0]  # take first
                 else:
                     wordpos = part_of_speech.lower()  # node.attrib['pos']

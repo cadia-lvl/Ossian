@@ -4,6 +4,7 @@
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
 
+from __future__ import print_function
 import sys
 import re
 import os
@@ -22,12 +23,13 @@ logging.basicConfig()  ##level=logging.DEBUG
 import timeit
 
 def start_clock(comment):
-    print '%s... '%(comment),
+    print('%s... '%(comment), end=' ')
     return (timeit.default_timer(), comment)
 
-def stop_clock((start_time, comment), width=40):
+def stop_clock(xxx_todo_changeme, width=40):
+    (start_time, comment) = xxx_todo_changeme
     padding = (width - len(comment)) * ' '
-    print '%s--> took %.2f seconds' % (padding, (timeit.default_timer() - start_time))  ##  / 60.)  ## min
+    print('%s--> took %.2f seconds' % (padding, (timeit.default_timer() - start_time)))  ##  / 60.)  ## min
 
 
 def main_work():
@@ -103,7 +105,7 @@ def main_work():
     for line in fileinput.input(opts.files):
        line = line.decode('utf-8').rstrip()
        t = start_clock('Synthesise sentence')
-       print line
+       print(line)
        if fileinput.isfirstline():
            if para != []:
                voice.synth_utterance(''.join(para), output_wavefile=output_wavefile, \
@@ -144,7 +146,7 @@ def parseSSML(tree, voice):
         if lang is not None:
             voice.config['language'] = lang
         intr = get_interpret_as(elem)
-        if intr is not None or voice.res.has_key('interpret_as'):
+        if intr is not None or 'interpret_as' in voice.res:
             voice.res.add_resource('interpret_as', intr)
             
         instr = elem.text

@@ -4,6 +4,7 @@
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
   
+from __future__ import print_function
 import sys
 import re
 import os
@@ -87,7 +88,7 @@ def main_work():
 def train(opts, dirs):
     
     ## Handle corpus:
-    print " -- Gather corpus"
+    print(" -- Gather corpus")
 
     ## Get names of directories containing corpus data (all txt and wav):
     corpora = []    
@@ -125,7 +126,7 @@ def train(opts, dirs):
 
     corpus = Corpus.Corpus(voice_data)
     
-    print " -- Train voice"
+    print(" -- Train voice")
     voice = Voice(opts.speaker, opts.lang, opts.config, opts.stage, \
                 dirs, clear_old_data=opts.clear, max_cores=opts.max_cores)
 

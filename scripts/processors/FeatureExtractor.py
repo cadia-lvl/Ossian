@@ -4,6 +4,8 @@
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
+from __future__ import print_function
+from __future__ import absolute_import
 import math 
 import os
 import glob
@@ -193,14 +195,14 @@ class WorldExtractor(SUtteranceProcessor):
         comm += " dither"   ## added for hi and rj data blizz 2014
         success = os.system(comm)
         if success != 0:
-            print 'sox failed on utterance ' + utt.get("utterance_name")
+            print('sox failed on utterance ' + utt.get("utterance_name"))
             return
        
         comm = "%s/analysis %s.wav %s.f0.double %s.sp.double %s.bap.double > %s.log"%(self.tool, outstem, outstem, outstem, outstem, outstem)
         success = os.system(comm)
         #print comm
         if success != 0:
-            print 'world analysis failed on utterance ' + utt.get("utterance_name")
+            print('world analysis failed on utterance ' + utt.get("utterance_name"))
             return
        
         if self.resynthesise_training_data:
@@ -208,28 +210,28 @@ class WorldExtractor(SUtteranceProcessor):
             comm = "%s/synth %s %s %s.f0.double %s.sp.double %s.bap.double %s.resyn.wav > %s.log"%(self.tool, fftl, rate, outstem, outstem, outstem, outstem, outstem)
             success = os.system(comm)
             if success != 0:
-                print 'world synthesis failed on utterance ' + utt.get("utterance_name")
+                print('world synthesis failed on utterance ' + utt.get("utterance_name"))
                 return       
        
         comm = "%s/x2x +df %s.sp.double | %s/sopr -R -m 32768.0 | %s/mcep -a %s -m %s -l %s -j 0 -f 0.0 -q 3 > %s.mgc"%(self.tool, outstem, self.tool, self.tool, alpha, order, fftl, outstem)
         ## -e 1.0E-8
         success = os.system(comm)
         if success != 0:
-            print 'conversion of world spectrum to mel cepstra failed on utterance ' + utt.get("utterance_name")
+            print('conversion of world spectrum to mel cepstra failed on utterance ' + utt.get("utterance_name"))
             return    
         
         for stream in ['bap']:
             comm = "%s/x2x +df %s.%s.double > %s.%s"%(self.tool, outstem, stream, outstem, stream)
             success = os.system(comm)
             if success != 0:
-                print 'double -> float conversion (stream: '+stream+') failed on utterance ' + utt.get("utterance_name")
+                print('double -> float conversion (stream: '+stream+') failed on utterance ' + utt.get("utterance_name"))
                 return    
 
         for stream in ['f0']:
             comm = "%s/x2x +da %s.%s.double > %s.%s.txt"%(self.tool, outstem, stream, outstem, stream)
             success = os.system(comm)
             if success != 0:
-                print 'double -> ascii conversion (stream: '+stream+') failed on utterance ' + utt.get("utterance_name")
+                print('double -> ascii conversion (stream: '+stream+') failed on utterance ' + utt.get("utterance_name"))
                 return                        
                     
         ## 5) F0 conversion:
@@ -245,7 +247,7 @@ class WorldExtractor(SUtteranceProcessor):
         comm = "%s/x2x +af %s.f0.log > %s.lf0"%(self.tool, outstem, outstem)
         success = os.system(comm)
         if success != 0:
-            print 'writing log f0 failed on utterance ' + utt.get("utterance_name")
+            print('writing log f0 failed on utterance ' + utt.get("utterance_name"))
             return
             
         ## add mcep/ap/f0 deltas:
@@ -254,7 +256,7 @@ class WorldExtractor(SUtteranceProcessor):
             comm += "%s.%s %s > %s.%s.delta"%(outstem, stream, ' '.join(self.winfiles), outstem, stream)
             success = os.system(comm)
             if success != 0:
-                print 'delta ('+stream+') extraction failed on utterance ' + utt.get("utterance_name")
+                print('delta ('+stream+') extraction failed on utterance ' + utt.get("utterance_name"))
                 return
   
         ### combined streams:--        

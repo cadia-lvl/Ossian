@@ -31,8 +31,9 @@ This algorithm normally gives correct results for simple words, but can produce 
 Thus it is important to perform compound analysis before applying the core syllabification algorithm.
 
 """
+from __future__ import absolute_import
 
-import syllable
+from . import syllable
 
 
 # each syllable has a vowel as a nucleus. 'e' and 'o' aren't actually in the inventory, but we need

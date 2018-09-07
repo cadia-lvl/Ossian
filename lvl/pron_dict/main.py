@@ -21,17 +21,19 @@ Example:
 
 
 """
+from __future__ import print_function
+from __future__ import absolute_import
 
 __license__ = 'Apache 2.0 (see: LICENSE)'
 
 import argparse
-import gpos
-import syllabification
-import stress
-import tree_builder
+from . import gpos
+from . import syllabification
+from . import stress
+from . import tree_builder
 
 
-from entry import PronDictEntry
+from .entry import PronDictEntry
 
 
 def init_pron_dict(dict_file):

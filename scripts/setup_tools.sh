@@ -4,7 +4,7 @@
 BASIC=1
 
 ### The following are only needed to train letter-to-sound rules, and for the gold standard english systems:
-SEQUITUR=0 
+SEQUITUR=1 
 STANFORD=0
 
 
@@ -40,7 +40,7 @@ if [ $BASIC == 1 ] ; then
     git clone https://github.com/cadia-lvl/merlin.git
     cd merlin
     ## reset to this specific version, which I have tested, must check later versions:--
-    git reset --hard 8aed278  
+    # git reset --hard 8aed278  
 
     ## Ossian will use Merlin's copy of World, instead of its own as previously:-
     cd $OSSIAN/tools/merlin/tools/WORLD/
@@ -105,8 +105,8 @@ if [ $BASIC == 1 ] ; then
 
     ## TODO: fix this to not need clang on Linux
     ## To compile on Mac, modify Makefile for delta tool:
-    mv ./bin/delta/Makefile ./bin/delta/Makefile.BAK
-    sed 's/CC = gcc/CC = clang/' ./bin/delta/Makefile.BAK > ./bin/delta/Makefile     ## (see http://sourceforge.net/p/sp-tk/bugs/68/)
+    # mv ./bin/delta/Makefile ./bin/delta/Makefile.BAK
+    # sed 's/CC = gcc/CC = clang/' ./bin/delta/Makefile.BAK > ./bin/delta/Makefile     ## (see http://sourceforge.net/p/sp-tk/bugs/68/)
 
     make
     make install

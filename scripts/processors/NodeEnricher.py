@@ -4,7 +4,8 @@
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
-from UtteranceProcessor import *
+from __future__ import absolute_import
+from .UtteranceProcessor import *
 
 class NodeEnricher(UtteranceProcessor):
     """
@@ -41,7 +42,7 @@ class NodeEnricher(UtteranceProcessor):
 #         utt.pretty_print()
         
     def enriching_function(self, input):
-        raise NotImplementedError, 'Please provide an enriching_function when subclassing NodeEnricher'  
+        raise NotImplementedError('Please provide an enriching_function when subclassing NodeEnricher')  
         
 
     def do_training(self, speech_corpus, text_corpus):

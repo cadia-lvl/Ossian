@@ -5,6 +5,8 @@
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
 
+from __future__ import print_function
+from __future__ import absolute_import
 from UtteranceProcessor import SUtteranceProcessor
 from util.NodeProcessors import *
 from FeatureExtractor import get_world_fft_and_apdim
@@ -103,7 +105,7 @@ class AcousticModel(SUtteranceProcessor):
             return
             
         if not self.trained:
-            print 'WARNING: Cannot apply processor %s till model is trained'%(self.processor_name)
+            print('WARNING: Cannot apply processor %s till model is trained'%(self.processor_name))
             return
 
 
@@ -145,7 +147,7 @@ class AcousticModel(SUtteranceProcessor):
 
         ## Double check not trained:
         if self.trained:
-            print "Acoustic model already trained!"
+            print("Acoustic model already trained!")
             return
 
 
@@ -153,7 +155,7 @@ class AcousticModel(SUtteranceProcessor):
 
 
         train_location = self.model_dir + "/training"        
-        print "\n          Training acoustic model -- see %s/log.txt\n"%(train_location) 
+        print("\n          Training acoustic model -- see %s/log.txt\n"%(train_location)) 
         if os.path.isdir(train_location):
             shutil.rmtree(train_location)  ## delete any existing stuff for a clean start
         os.makedirs(train_location)
@@ -222,7 +224,7 @@ class AcousticModelGlott(AcousticModel):
 
 
         if not self.trained:
-            print 'WARNING: Cannot apply processor %s till model is trained'%(self.processor_name)
+            print('WARNING: Cannot apply processor %s till model is trained'%(self.processor_name))
             return
         
         self.model_dir = os.path.join(self.get_location())
@@ -308,7 +310,7 @@ class AcousticModelWorld(AcousticModel):
 
 
         if not self.trained:
-            print 'WARNING: Cannot apply processor %s till model is trained'%(self.processor_name)
+            print('WARNING: Cannot apply processor %s till model is trained'%(self.processor_name))
             return
         
         #self.postfilter_coeff = self.postfilter_coeff
@@ -352,7 +354,7 @@ class AcousticModelWorld(AcousticModel):
             comm += " -ot %s.log "%(label)
             comm += "    %s  "%(label)
         
-            print comm
+            print(comm)
             
             os.system(comm)
 
@@ -439,7 +441,7 @@ class AcousticModelWorld(AcousticModel):
 
 
         comm = "%s/synth %s %s /tmp/tmp_a.f0.d /tmp/tmp.spec /tmp/tmp_d.bap /tmp/tmp.resyn.wav"%(bin, fftl, sr)
-        print comm
+        print(comm)
         os.system(comm)
         os.system("mv /tmp/tmp.resyn.wav "+owave)
     
@@ -459,7 +461,7 @@ class HTSDurationModel(AcousticModel):
             return
 
         if not self.trained:
-            print 'WARNING: Cannot apply processor %s till model is trained'%(self.processor_name)
+            print('WARNING: Cannot apply processor %s till model is trained'%(self.processor_name))
             return
         
         self.postfilter_coeff = self.config.get('postfilter_coeff','0.0')
@@ -505,7 +507,7 @@ class HTSDurationModel(AcousticModel):
         comm += " -ot %s.log "%(label)
         comm += "    %s  "%(label)
     
-        print comm
+        print(comm)
         
         os.system(comm)
 

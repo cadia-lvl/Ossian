@@ -1,3 +1,4 @@
+from __future__ import print_function
 import numpy as NP
 
 """
@@ -145,7 +146,7 @@ class Cwt:
             nmax=ndata/largestscale/2
             self.scales=NP.arange(float(2),float(nmax))
             self.nscale=len(self.scales)
-        else: raise ValueError, "scaling must be linear or log"
+        else: raise ValueError("scaling must be linear or log")
         return
     
     def getdata(self):
@@ -290,7 +291,7 @@ class DOG(Cwt):
         try:
             from scipy.special import gamma
         except ImportError:
-            print "Requires scipy gamma function"
+            print("Requires scipy gamma function")
             raise ImportError
         Cwt.fourierwl=2* NP.pi/ NP.sqrt(self.order+0.5)
         m=self.order

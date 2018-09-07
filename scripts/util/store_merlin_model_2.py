@@ -1,3 +1,4 @@
+from __future__ import print_function
 import cPickle
 import gzip
 import os, sys, errno
@@ -110,8 +111,8 @@ def store_network(nnets_file_name, lab_dim, outdir):
     min_vect = lab_norm_data[:(labsize / 2)]
     max_vect = lab_norm_data[(labsize / 2):]
 
-    print min_vect
-    print max_vect
+    print(min_vect)
+    print(max_vect)
 
     fname = 'NORM_INPUT_MIN'
     numpy.save(os.path.join(outdir, fname + '.npy'), min_vect)
@@ -130,8 +131,8 @@ def store_network(nnets_file_name, lab_dim, outdir):
     mean_vect = out_norm_data[:(outsize / 2)]
     std_vect = out_norm_data[(outsize / 2):]
 
-    print mean_vect
-    print std_vect
+    print(mean_vect)
+    print(std_vect)
 
     fname = 'NORM_OUTPUT_MEAN'
     numpy.save(os.path.join(outdir, fname + '.npy'), mean_vect)

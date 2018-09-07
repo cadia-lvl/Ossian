@@ -3,6 +3,7 @@
 ## Project: Simple4All - November 2013 - www.simple4all.org 
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
   
+from __future__ import print_function
 import sys
 import re
 import os
@@ -39,7 +40,7 @@ def main_work():
         if f in train_dict:
             outlist.append(train_dict[f])
         else:
-            print '%s skipped -- no label for it'%(f)
+            print('%s skipped -- no label for it'%(f))
     
     ## overwrite training list:
     writelist(outlist, opts.trainlist)
