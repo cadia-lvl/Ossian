@@ -226,6 +226,7 @@ class FeatureDumper(SUtteranceProcessor):
             NA_present = False
             no_nan = self.remove_nan(values)
             if len(values) > len(no_nan):
+                values = no_nan
                 NA_present = True
             
             if all_entries_of_type(values, str):
