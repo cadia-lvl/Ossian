@@ -188,7 +188,15 @@ class FeatureDumper(SUtteranceProcessor):
                 else:
                     filtered[question] = count
         return filtered
-             
+
+    def remove_nan(self, value_list):
+        if '_NA_' in value_list:
+            value_list.remove('_NA_')
+
+        no_nans = []
+        no_nans[:] = [v for v in value_list if not numpy.isnan(v)]
+        return no_nans
+
     def format_question_set(self, raw_questions, outfile):
         """
         Take raw_questions: list of (number, name, value) triplets, ...
@@ -215,10 +223,9 @@ class FeatureDumper(SUtteranceProcessor):
             values.sort()
             key_list.append((number, name))
             
-            
             NA_present = False
-            if '_NA_' in values:
-                values.remove('_NA_')
+            no_nan = self.remove_nan(values)
+            if len(values) > len(no_nan):
                 NA_present = True
             
             if all_entries_of_type(values, str):
