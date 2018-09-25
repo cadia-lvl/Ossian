@@ -192,6 +192,12 @@ class FeatureDumper(SUtteranceProcessor):
     def remove_nan(self, value_list):
         if '_NA_' in value_list:
             value_list.remove('_NA_')
+            return value_list
+
+        for v in value_list:
+            # for a list of strings, the isnan test will fail with an error
+            if type(v)==str:
+                return value_list
 
         no_nans = []
         no_nans[:] = [v for v in value_list if not numpy.isnan(v)]
