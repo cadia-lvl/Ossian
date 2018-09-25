@@ -25,7 +25,7 @@ import default.const as c
 from processors.NodeEnricher import NodeEnricher
 from processors.UtteranceProcessor import SUtteranceProcessor
 
-from UtteranceProcessor import Element
+from processors.UtteranceProcessor import Element
 
 from util.LookupTable import LookupTable
 

@@ -7,7 +7,7 @@ import re
 import os
 import default.const as c
 
-from Lexicon import Lexicon
+from scripts.processors.Lexicon import Lexicon
 
 from lvl.pron_dict import entry
 from lvl.pron_dict import syllabification

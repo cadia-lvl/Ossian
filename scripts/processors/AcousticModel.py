@@ -7,9 +7,9 @@
 
 from __future__ import print_function
 from __future__ import absolute_import
-from UtteranceProcessor import SUtteranceProcessor
+from scripts.processors.UtteranceProcessor import SUtteranceProcessor
 from util.NodeProcessors import *
-from FeatureExtractor import get_world_fft_and_apdim
+from scripts.processors.FeatureExtractor import get_world_fft_and_apdim
 
 from distutils.spawn import find_executable
 

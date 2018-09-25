@@ -14,7 +14,7 @@ import sys
 
 from util.speech_manip import get_speech, put_speech
 from naive.naive_util import readlist, writelist, add_htk_header
-from UtteranceProcessor import SUtteranceProcessor
+from scripts.processors.UtteranceProcessor import SUtteranceProcessor
 import default.const as c
 
 

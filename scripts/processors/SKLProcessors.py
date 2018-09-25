@@ -17,7 +17,7 @@ import pickle
 from sklearn import tree
 from sklearn.feature_extraction import DictVectorizer
 
-from UtteranceProcessor import SUtteranceProcessor
+from scripts.processors.UtteranceProcessor import SUtteranceProcessor
 import logging
 import default.const as c
 

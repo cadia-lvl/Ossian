@@ -8,7 +8,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 import os
 import string
-from UtteranceProcessor import SUtteranceProcessor
+from scripts.processors.UtteranceProcessor import SUtteranceProcessor
 import default.const as c
 from collections import defaultdict
 from naive.naive_util import writelist, all_entries_of_type, ms_to_htk, make_htk_wildcards
