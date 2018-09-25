@@ -84,7 +84,8 @@ class FeatureDumper(SUtteranceProcessor):
 
         nodelist = utt.xpath(self.target_nodes)
         if nodelist == []:            
-            print('WARNING: FeatureDumper\'s target_nodes matches no nodes: %s'%(self.config["target_nodes"]))
+            #print('WARNING: FeatureDumper\'s target_nodes matches no nodes: %s'%(self.config["target_nodes"]))
+            print('WARNING: FeatureDumper\'s target_nodes matches no nodes: %s' % (self.target_nodes))
 
         for node in nodelist:
             node_data, node_questions = self.get_node_context_label(node)
