@@ -12,13 +12,12 @@ from argparse import ArgumentParser
 
 ## find location of util relative to current script:
 loc = os.path.abspath(os.path.join( __file__, os.pardir, os.pardir, 'util') )
-sys.path.append(loc)
-
+sys.path.insert(0,loc)
 
 from util import *
 
 def main_work():
-
+    print("sys path: " + str(sys.path))
     #################################################
 
     # ======== Get stuff from command line ==========
@@ -136,9 +135,9 @@ def get_duration_dict(uttlist, labdir, lab_ext):
     mapping = {}
     for base in uttlist:
         lab = os.path.join(labdir, base + '.' + lab_ext)
-        last_line = readlist(lab)[-1]
+        last_line = util.readlist(lab)[-1]
         (start, end, phone) = re.split('\s+', last_line)
-        mapping[base] = htk_to_sec(int(end))
+        mapping[base] = util.htk_to_sec(int(end))
     return mapping
     
 def get_phone_dict(uttlist, labdir, lab_ext):

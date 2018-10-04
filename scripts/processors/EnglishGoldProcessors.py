@@ -11,12 +11,30 @@ import regex
 import copy
 
 from processors.UtteranceProcessor import UtteranceProcessor
+from processors.UtteranceProcessor import SUtteranceProcessor
 from processors.NodeEnricher import NodeEnricher
 from main.Utterance import Element
 
 from util.NodeProcessors import ensure_times_consistent
 
 from naive.naive_util import writelist
+
+class TextNormaliser(SUtteranceProcessor):
+
+    def __init__(self, target_nodes, input_attribute, output_attribute):
+        self.target_nodes = target_nodes
+        self.input_attribute = input_attribute
+        self.output_attribute = output_attribute
+
+        self.scripts = '/Users/anna/Ossian/rules/en/textnorm/scripts'
+        self.rules = '/Users/anna/Ossian/rules/en/textnorm/rules'
+
+        self.scripts = os.path.join(self.voice_resources.get_path(c.RULES), 'textnorm', 'scripts')
+        self.rules = os.path.join(self.voice_resources.get_path(c.RULES), 'textnorm', 'rules')
+
+    def do_training(self, speech_corpus, text_corpus):
+        print "TextNormliser requires no training"
+
 
 class EnglishTextNormaliser(NodeEnricher):
     '''
@@ -25,9 +43,9 @@ class EnglishTextNormaliser(NodeEnricher):
         NodeEnricher.load(self)
 
         self.target_nodes = self.config.get('target_nodes', '//utt')
-        self.input_attribute = self.config.get('input_attribute', 'text')      
+        self.input_attribute = self.config.get('input_attribute', 'text')
         self.output_attribute = self.config.get('output_attribute', 'norm_text')
-        
+
         self.scripts = os.path.join(self.voice_resources.get_path(c.RULES), 'textnorm', 'scripts')
         self.rules = os.path.join(self.voice_resources.get_path(c.RULES), 'textnorm', 'rules')
         

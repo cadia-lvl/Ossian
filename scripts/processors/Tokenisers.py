@@ -7,11 +7,13 @@
 #from naive.naive_util import *
 import unicodedata
 import glob
+import subprocess
 from processors.UtteranceProcessor import SUtteranceProcessor, Element
 # from processors.NodeSplitter import *
 # from processors.NodeEnricher import *
 import datetime
 from naive import naive_util
+from normalizing import expand_numbers
 
 try:
     import regex as new_regex
@@ -158,9 +160,144 @@ Code    Description
 [Zl]    Separator, Line
 [Zp]    Separator, Paragraph
 [Zs]    Separator, Space
-'''        
+'''
 
-# class SafeTextMaker(NodeEnricher):
+import os
+
+class NormalizingTokeniser(SUtteranceProcessor):
+    '''
+    A very crude tokeniser, which:
+
+    1. splits text with a regular expression specified
+    in config file, which defaults to whitespace. Note that whether spaces etc. are
+    treated as tokens or not depends on use of brackets in the regex -- cf. (\s+) and \s+
+
+    2. optionally
+
+    3. classifies tokens on the basis of regex
+
+    4. optionally add safetext representation
+    '''
+
+    def __init__(self, processor_name='regex_tokeniser', target_nodes='//utt', split_attribute='text', \
+                 child_node_type='token', add_terminal_tokens=True, split_pattern='\s+', \
+                 add_token_classes=True, \
+                 class_patterns=[('space', '\A\s+\Z'), ('punctuation', '\A[\.\,\;\!\?\s]+\Z')], \
+                 default_class='word', class_attribute='token_class',
+                 add_safetext=True,
+                 safetext_attribute='safetext',
+                 lowercase_safetext=True):
+
+        self.processor_name = processor_name
+
+        self.split_pattern = split_pattern
+        self.target_nodes = target_nodes
+        self.split_attribute = split_attribute
+        self.child_node_type = child_node_type
+        self.add_terminal_tokens = add_terminal_tokens
+        self.class_patterns = [(name, new_regex.compile(patt)) for (name, patt) in class_patterns]
+        self.default_class = default_class
+        self.class_attribute = class_attribute
+        self.add_token_classes = add_token_classes
+
+        self.add_safetext = add_safetext
+        self.safetext_attribute = safetext_attribute
+        self.lowercase_safetext = lowercase_safetext
+
+        self.regex = new_regex.compile(self.split_pattern)
+
+        self.scripts = '/Users/anna/Ossian/rules/en/textnorm/scripts'
+        self.rules = '/Users/anna/Ossian/rules/en/textnorm/rules'
+
+        self.expander = expand_numbers.Expander()
+
+        super(NormalizingTokeniser, self).__init__()
+
+    def process_utterance(self, utt):
+
+        # print 'target nodes: %s'%(utt.xpath(self.target_nodes))
+        for node in utt.xpath(self.target_nodes):
+            assert node.has_attribute(self.split_attribute)
+            to_split = node.get(self.split_attribute)
+            #normalised = self.normalise(to_split)
+            normalised = self.normalise_ice(to_split)
+            child_chunks = self.splitting_function(normalised)
+
+            for chunk in child_chunks:
+                # print '=='
+                # print chunk
+                child = Element(self.child_node_type)
+                child.set(self.split_attribute, chunk)
+
+                if self.add_token_classes:
+                    token_class = self.classify_token(chunk)
+                    # print token_class
+                    child.set(self.class_attribute, token_class)
+
+                if self.add_safetext:
+                    token_safetext = self.safetext_token(chunk)
+                    child.set(self.safetext_attribute, token_safetext)
+
+                node.add_child(child)
+
+    def classify_token(self, token):
+
+        ## Special handling of terminal token:
+        if token == c.TERMINAL:
+            return c.TERMINAL
+        for (item_class, pattern) in self.class_patterns:
+            if pattern.match(token):
+                return item_class
+        ## if we have got this far, none of patterns matched -- return default:
+        return self.default_class
+
+    def safetext_token(self, instring):
+
+        ## Special handling of terminal token:
+        if instring == c.TERMINAL:
+            return c.TERMINAL
+        else:
+            if self.lowercase_safetext == 'True':
+                return naive_util.safetext(instring.lower())
+            else:
+                return naive_util.safetext(instring)
+
+    def splitting_function(self, instring):
+        tokens = self.regex.split(instring)
+        tokens = [t for t in tokens if t != '']
+        if self.add_terminal_tokens:
+            tokens = [c.TERMINAL] + tokens + [c.TERMINAL]
+        return tokens
+
+    def normalise_ice(self, instring):
+        normalised_string = self.expander.normalize(instring)
+
+        return normalised_string
+
+
+    def normalise(self, instring):
+
+        ## quote the string and escape ' for shell command:
+        instring = "'" + instring.replace("'", "'\\''") + "'"
+
+        comm = "echo %s | %s/utf2ascii_puncts.pl | " % (instring, self.scripts)
+        comm += " %s/normalize_puncts.pl %s/abbrevlist %s/tldlist | " % (self.scripts, self.rules, self.rules)
+        comm += "%s/tokenize_words.pl %s/abbrevmap %s/tldlist %s/hyphenated | " % (
+        self.scripts, self.rules, self.rules, self.rules)
+        comm += "%s/numproc -x%s/num_excp" % (self.scripts, self.rules)
+
+        normalised_string = subprocess.check_output(comm, shell=True)
+
+        ## TODO: handle b.b.c. -> b b c here, and lowercase?
+        ## TODO: handle punctuation for incomplet sentences:  Of silence,"/>
+
+        return normalised_string.strip(' \n').decode('utf-8')
+
+    def do_training(self, speech_corpus, text_corpus):
+        print "NormalizingTokeniser requires no training"
+
+
+    # class SafeTextMaker(NodeEnricher):
 #     '''Lowercase, convert to ascii-safe strings, but handle terminal token specially'''
 #     def load(self):
 #         NodeEnricher.load(self)
