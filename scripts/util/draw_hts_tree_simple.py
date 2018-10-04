@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 
+from __future__ import print_function
 import sys, os, re, math, string
 from string import strip
 from argparse import ArgumentParser
@@ -83,7 +84,7 @@ def parse_treefile_general(treefile, get_questions=False):
     #print bracketed
     #### bracketed should consist of name, tree, name, tree... -- sort it out
     if len(bracketed) % 2 != 0:
-        print "bracketed should consist of name, tree, name, tree"
+        print("bracketed should consist of name, tree, name, tree")
         sys.exit(1)
         
     data = []
@@ -168,7 +169,7 @@ def add_plot_info_to_treedict(treedict, colour="leaf_nonleaf", text="question", 
                 treedict[node]["colour"] = piss
             else:
                 if highlight_indexes:
-                    print treedict[node]
+                    print(treedict[node])
                     index = int(treedict[node]["leaf_name"].split("_")[-1])
                     if index in highlight_indexes:
                         treedict[node]["colour"] = blue
@@ -217,7 +218,7 @@ def add_plot_info_to_treedict(treedict, colour="leaf_nonleaf", text="question", 
 def add_leaf_entries(tree):
 
     for node in tree.keys():
-        print tree[node]
+        print(tree[node])
         for child in ["yes_branch", "no_branch"]:
             child = tree[node][child]
             if child not in tree:
@@ -351,14 +352,14 @@ def main_work():
 
 
     ### 1) read trees
-    print "Reading trees..."
+    print("Reading trees...")
         
     state_trees = parse_treefile_general(opts.treefile)
     (modelname,tree) = state_trees[opts.state_to_draw] ## take the one we want
     tree = treelist_to_dict(tree)
 
     for key in tree.keys():
-        print "%s %s"%(key, tree[key]["question"])
+        print("%s %s"%(key, tree[key]["question"]))
 
     tree = add_leaf_entries(tree)
 
@@ -401,27 +402,27 @@ def main_work():
 
     ### dot - svg
     comm = "dot -Tsvg " + dot + " > " + svg
-    print comm
+    print(comm)
     os.system(comm)    
 
     ### dot - png
     comm = "dot -Tpng " + dot + " > " + png
-    print comm
+    print(comm)
     os.system(comm)
           
     ### dot - ps
     comm = "dot -Tps " + dot + " > " + ps
-    print comm
+    print(comm)
     os.system(comm)      
 
     ### dot - pdf
     comm = "dot -Tpdf " + dot + " > " + pdf
-    print comm
+    print(comm)
     os.system(comm) 
 
     ### dot - fig
     comm = "dot -Tfig " + dot + " > " + fig
-    print comm
+    print(comm)
     os.system(comm) 
           
     # # #     

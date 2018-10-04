@@ -4,7 +4,8 @@
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
-from UtteranceProcessor import *
+from __future__ import absolute_import
+from .UtteranceProcessor import *
 
 class SimpleChildAdder(UtteranceProcessor):
     """

@@ -1,3 +1,4 @@
+from __future__ import print_function
 
 import cPickle
 import gzip
@@ -69,14 +70,14 @@ def store_network(nnets_file_name, lab_dim, outdir):
     names = [p.name for p in dnn_model.params]
     param_vals = [p.get_value(borrow=True) for p in dnn_model.params]
     shapes = [numpy.shape(p) for p in param_vals]
-    print cfg.hidden_layer_size    
+    print(cfg.hidden_layer_size)    
     layer_types = cfg.hidden_layer_type
     if cfg.output_activation == 'linear':
         layer_types.append('LINEAR')
     else:
         sys.exit('unsupported output activation')
     assert len(param_vals) == len(layer_types) * 2 ##  W and b for each layer
-    print names
+    print(names)
     
     
     p_ix = 0
@@ -86,7 +87,7 @@ def store_network(nnets_file_name, lab_dim, outdir):
         for part in ['W','b']:
             assert names[p_ix] == part
             fname = layer_name + part
-            print fname
+            print(fname)
             #numpy.savetxt(os.path.join(outdir, fname + '.txt'), param_vals[p_ix])
             numpy.save(os.path.join(outdir, fname + '.npy'), param_vals[p_ix])
             
@@ -106,8 +107,8 @@ def store_network(nnets_file_name, lab_dim, outdir):
     min_vect = lab_norm_data[:(labsize/2)]
     max_vect = lab_norm_data[(labsize/2):]
      
-    print min_vect
-    print max_vect
+    print(min_vect)
+    print(max_vect)
     
     fname = 'NORM_INPUT_MIN'
     numpy.save(os.path.join(outdir, fname + '.npy'), min_vect)
@@ -126,8 +127,8 @@ def store_network(nnets_file_name, lab_dim, outdir):
     mean_vect = out_norm_data[:(outsize/2)]
     std_vect = out_norm_data[(outsize/2):]
      
-    print mean_vect
-    print std_vect
+    print(mean_vect)
+    print(std_vect)
     
     fname = 'NORM_OUTPUT_MEAN'
     numpy.save(os.path.join(outdir, fname + '.npy'), mean_vect)

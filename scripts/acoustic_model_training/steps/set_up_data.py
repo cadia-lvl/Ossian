@@ -3,6 +3,7 @@
 ## Project: Simple4All - November 2013 - www.simple4all.org 
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
   
+from __future__ import print_function
 import sys
 import re
 import os
@@ -82,7 +83,7 @@ def main_work():
             keeplist.append(utt)
             if total >= sec_needed:
                 break
-        print 'Keep %s of %s utts -- %s minutes'%(len(keeplist), len(uttlist), (total/60.0))
+        print('Keep %s of %s utts -- %s minutes'%(len(keeplist), len(uttlist), (total/60.0)))
             
     elif kind=='examples':
         (mapping, found) = get_phone_dict(intersect, opts.labdir, lab_ext)
@@ -102,8 +103,8 @@ def main_work():
                     full = False
             if full:
                 break
-        print 'Keep %s of %s utts '%(len(keeplist), len(uttlist))
-        print 'Coverage: %s'%(found)
+        print('Keep %s of %s utts '%(len(keeplist), len(uttlist)))
+        print('Coverage: %s'%(found))
 
     else:
         assert kind=='all','Bad value for kind: %s -- something gone wrong.'%(kind)
@@ -122,12 +123,12 @@ def main_work():
     ## 2) Make mlfs and model lists for monophones and fullcontext phones:
     comm=BIN+"""/HLEd -A -D -T 1 -V -l '*' -n %s -i %s -S %s %s
                 """%(fulllist, fullmlf, lablist, nullhed(opts.outdir))
-    print comm
+    print(comm)
     os.system(comm)
     
     comm=BIN+"""/HLEd -A -D -T 1 -V -l '*' -n %s -i %s -S %s -m %s %s
                 """%(monolist, monomlf, lablist, nullhed(opts.outdir), fullmlf)
-    print comm
+    print(comm)
     os.system(comm)
 
 

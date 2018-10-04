@@ -4,6 +4,7 @@
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
+from __future__ import print_function
 from naive.naive_util import *
 import unicodedata
 import glob
@@ -40,7 +41,7 @@ class IndianScriptLatiniser(NodeSplitter):
         return tokens 
         
     def do_training(self, speech_corpus, text_corpus):
-        print "IndianScriptLatiniser requires no training"    
+        print("IndianScriptLatiniser requires no training")    
 
 
 

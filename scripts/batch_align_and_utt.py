@@ -4,6 +4,7 @@
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
 
+from __future__ import print_function
 import sys
 import re
 import os
@@ -96,8 +97,8 @@ def main_work():
            input_wavefile = os.path.join(opts.input_wav, base + '.wav')
        output_uttfile = os.path.join(opts.output_utt, base + '.utt')
        text = ' '.join(readlist(filename))
-       print text
-       print base
+       print(text)
+       print(base)
        voice.synth_utterance(text, input_wavefile=input_wavefile, output_uttfile=output_uttfile)
 
         

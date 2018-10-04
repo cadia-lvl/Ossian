@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
 import sys
 import re
 
@@ -12,7 +13,7 @@ def main_work():
     # ======== Get stuff from command line ==========
 
     def usage():
-        print "Usage: ......  "
+        print("Usage: ......  ")
         sys.exit(1)
 
     # e.g. 
@@ -46,9 +47,9 @@ class SynthSession(ConfiguredComponent):
     
 
     def load(self):
-        print 
-        print " -- Start a TTS session -- "
-        print 
+        print() 
+        print(" -- Start a TTS session -- ")
+        print() 
 
         sys.path.append(self.config["SCRIPT"] + "/gensim-0.5.0/src/")
 
@@ -62,7 +63,7 @@ class SynthSession(ConfiguredComponent):
 
     def train(self):
         
-        print "SynthSession object is not trainable -- proceed with loading"
+        print("SynthSession object is not trainable -- proceed with loading")
         self.load()
 
 
@@ -82,7 +83,7 @@ class SynthSession(ConfiguredComponent):
             if self.validate_command(command_code):
 
                 if command_code == "quit":
-                    print " -- Session over -- "
+                    print(" -- Session over -- ")
                     finished_session = True
 
                 else:
@@ -96,7 +97,7 @@ class SynthSession(ConfiguredComponent):
     def validate_command(self, command_code):
 
         if command_code not in self.command_dict:
-            print "Command '%s' is not valid"%(command_code)
+            print("Command '%s' is not valid"%(command_code))
             return False
         else:
             return True
@@ -112,10 +113,10 @@ class SynthSession(ConfiguredComponent):
 
         
         if not arg:
-            print "Command 'voice' must be followed by voice to load"
+            print("Command 'voice' must be followed by voice to load")
             return
         voice_fname = os.path.join(self.config["VOICES"], arg + ".cfg")
-        print "Load voice %s from file %s"%(arg, voice_fname)
+        print("Load voice %s from file %s"%(arg, voice_fname))
         
         self.current_voice = Voice(config_file=voice_fname)
 
@@ -124,12 +125,12 @@ class SynthSession(ConfiguredComponent):
         text = text.decode(sys.stdin.encoding)  
 
         if not text:
-            print "Command 'tts' must be followed by text to convert"
+            print("Command 'tts' must be followed by text to convert")
             return        
         if not self.current_voice:
-            print "A voice must be loaded to do TTS"
+            print("A voice must be loaded to do TTS")
             return
-        print "Synth from text: %s"%(text)
+        print("Synth from text: %s"%(text))
         self.current_voice.synth_utterance(text)
 
 
@@ -139,7 +140,7 @@ class SynthSession(ConfiguredComponent):
         voice_list = [voice for voice in voice_list if not voice.endswith("~")] ## Filter linux temp files
         voice_list = [remove_extension(voice) for voice in voice_list]
         if len(voice_list) == 0:
-            print "There are no voices currently in the library at %s"%(self.config["VOICES"])
+            print("There are no voices currently in the library at %s"%(self.config["VOICES"]))
             return
         title = "Voices currently in the library:"
         items = voice_list
@@ -151,14 +152,14 @@ class SynthSession(ConfiguredComponent):
         offset = "    "
         bigger_offset = "      "
 
-        print
-        print "%s%s"%(offset, "="*width) ## thick line
-        print "%s%s"%(offset, string.center(title, width)) ## centered title
-        print "%s%s"%(offset, "-"*width) ## thin line
+        print()
+        print("%s%s"%(offset, "="*width)) ## thick line
+        print("%s%s"%(offset, string.center(title, width))) ## centered title
+        print("%s%s"%(offset, "-"*width)) ## thin line
         for item in items:
-            print "%s%s"%(bigger_offset, item)
-        print "%s%s"%(offset, "="*width) ## thick line
-        print
+            print("%s%s"%(bigger_offset, item))
+        print("%s%s"%(offset, "="*width)) ## thick line
+        print()
 
 
 if __name__=="__main__":

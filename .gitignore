@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Backup files
+*.py.bak
+*.py.save
+
 #index
 .DS_Store
 
@@ -14,6 +18,17 @@ tools/bin/
 tools/include/
 tools/merlin/
 tools/share/
+tools/g2p/
+
+<<<<<<< HEAD
+#model files
+train/
+=======
+#trained/tested models
+train/
+test/
+>>>>>>> master
+voices/
 
 #virtualenv
 ossian/
@@ -109,8 +124,17 @@ ENV/
 # Rope project settings
 .ropeproject
 
+# Pycharm project settings
+.idea
+
+# vscode project settings
+.vscode
+
 # mkdocs documentation
 /site
 
 # mypy
 .mypy_cache/
+/test/
+!/corpus/ice/speakers/remove_unwanted.py
+

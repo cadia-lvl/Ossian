@@ -4,6 +4,7 @@
 '''
 
 '''
+from __future__ import print_function
 
 import sys
 import glob
@@ -43,8 +44,8 @@ def main_work():
     token_xpath = "//token"
   
   
-    print 
-    print 'syllable'
+    print() 
+    print('syllable')
   
     for uttfile in sorted(glob.glob(indir + '/*.utt')):
         
@@ -78,10 +79,10 @@ def main_work():
             words.append( node.attrib['norm_text'] + '_' + syllprom)
     
                 
-        print ' '.join(words).replace('  ', ' ')
+        print(' '.join(words).replace('  ', ' '))
 
 
-    print '\n\n\n\n\n-------dynamic_prom on syll\n\n\n\n'
+    print('\n\n\n\n\n-------dynamic_prom on syll\n\n\n\n')
   
     for uttfile in sorted(glob.glob(indir + '/*.utt')):
       
@@ -100,10 +101,10 @@ def main_work():
             words.append( node.attrib['norm_text'] + '_' + syllprom)
     
                 
-        print ' '.join(words).replace('  ', ' ')
+        print(' '.join(words).replace('  ', ' '))
 
 
-    print '\n\n\n\n\n-------words:\n\n\n\n'
+    print('\n\n\n\n\n-------words:\n\n\n\n')
   
     for uttfile in sorted(glob.glob(indir + '/*.utt')):
         
@@ -118,7 +119,7 @@ def main_work():
                 words.append( node.attrib['norm_text'] )
            
                 
-        print ' '.join(words).replace('  ', ' ')
+        print(' '.join(words).replace('  ', ' '))
 
 
 

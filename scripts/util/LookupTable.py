@@ -4,6 +4,7 @@
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
+from __future__ import print_function
 from naive.naive_util import *
 
 
@@ -29,7 +30,7 @@ class LookupTable(object):
     def verify_table(self):
 
         ## take keys of some arbitrary entry as fields names
-        self.fields = sorted(self.table.values()[0].keys())
+        self.fields = sorted(list(self.table.values())[0].keys())
 
         ## check all entries have same fields
         for (k, v) in self.table.items():
@@ -71,7 +72,7 @@ class LookupTable(object):
             if len(line) != len(data[0]):
                 if self.is_phoneset:
                     sys.exit('Wrong number of elements in phoneset line: ' + str(line))
-                print 'Skip line %s -- wrong number of elements'%(i)  
+                print('Skip line %s -- wrong number of elements'%(i))  
                         ## just throw this representation away --
                         ## don't throw an error as previously
             else:
@@ -141,4 +142,4 @@ if __name__ == "__main__":
 #    print table
  #   print table.table
  #   print table.fields
-    print table.lookup('aa', field='vowel_cons')
+    print(table.lookup('aa', field='vowel_cons'))

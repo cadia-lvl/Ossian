@@ -4,6 +4,7 @@
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
   
+from __future__ import print_function
 import sys
 import re
 import os
@@ -63,6 +64,8 @@ def main_work():
                             uses only voice prompts if not specified""")
     a.add_argument('-d', dest='command_line_corpus', required=False, action="append", \
                     help= "directories in arbitrary location containing training data")
+    a.add_argument('-file_num', dest='file_num', required=False, \
+                 help="specify number of files to be used in training")
     
     a.add_argument('-p', dest='max_cores', required=False, help="maximum number of CPU cores to use in parallel")
     a.add_argument('-bin', dest='custom_bindir') 
@@ -85,7 +88,7 @@ def main_work():
 def train(opts, dirs):
     
     ## Handle corpus:
-    print " -- Gather corpus"
+    print(" -- Gather corpus")
 
     ## Get names of directories containing corpus data (all txt and wav):
     corpora = []    
@@ -103,17 +106,27 @@ def train(opts, dirs):
         if opts.text_corpus_name:
             corpora.append(os.path.join(dirs['CORPUS'], opts.lang,fname.TEXT_CORPORA, opts.text_corpus_name))
 
+    # Set file number
+    if opts.file_num:
+        file_num = int(opts.file_num)
+    else:
+        file_num = float("inf")
 
-
-    ## Get names of individual txt and wav files:
+    # Get names of individual txt and wav files:
     voice_data = []
     for c in corpora:
-        for f in os.listdir(c):
-            voice_data.append(os.path.join(c, f))
+        count = 0
+        for f in sorted(os.listdir(c)):
+            if '._' not in f:
+                voice_data.append(os.path.join(c, f))
+                count += 1
+                # Stop appending voice data at file_num
+            if count >= file_num:
+                break
 
     corpus = Corpus.Corpus(voice_data)
     
-    print " -- Train voice"
+    print(" -- Train voice")
     voice = Voice(opts.speaker, opts.lang, opts.config, opts.stage, \
                 dirs, clear_old_data=opts.clear, max_cores=opts.max_cores)
 

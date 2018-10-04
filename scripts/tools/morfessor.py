@@ -8,6 +8,7 @@ Runs on PyPy, Python3.2+ and Python2.7+ (in order of preference and speed)
 
 For nice progress indications when training, install progressbar from pypi. For example with `easy_install progressbar`
 """
+from __future__ import print_function
 
 
 
@@ -172,7 +173,7 @@ class MorphModel:
         """
         if len(self.morph_log_prob) == 0:
             raise Exception("Load model first")
-        print "segmenting"
+        print("segmenting")
         T = len(word)
         bad_likelihood = (T + 1) * self.log_num_morph_tokens
         pseudo_infinite_cost = (T + 1) * bad_likelihood

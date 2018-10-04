@@ -4,6 +4,7 @@
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
+from __future__ import print_function
 from main.Utterance import *
 import copy
 import string
@@ -15,7 +16,7 @@ apply arbitrary functions to create a new attribute from an existing one).
 
 """
 
-def enrich_nodes(node, function=string.upper,\
+def enrich_nodes(node, function=str.upper,\
                      target_nodes="//Token", input_attribute="text", \
                      output_attribute="uppercase_text", overwrite=True, kwargs={}):
     """
@@ -85,10 +86,10 @@ def add_syllable_structure(node, pronunciation, syllable_delimiter='|', syllable
                 phone = phone.strip('012')
             clean_phones.append(phone)
         if len(stress_marks) == 0:
-            print 'WARNING: no stress mark in syllable "%s"'%(syll)
+            print('WARNING: no stress mark in syllable "%s"'%(syll))
             stress_marks = ['0']
         elif len(stress_marks) > 1:
-            print 'WARNING: multiple stress marks in syllable "%s" -- take the first'%(syll)
+            print('WARNING: multiple stress marks in syllable "%s" -- take the first'%(syll))
         stress = stress_marks[0]
         syll_node = Element(syllable_tag)
         syll_node.set(pronunciation_attribute, syll)
@@ -134,7 +135,7 @@ def do_lex_lookup(node, target_nodes="//Token", lexicon=None):
             pronunciation = "sil"  ## don't allow skip at utt end, else:
                             ##  ERROR [+7332]  CreateInsts: Cannot have Tee models at start or end of transcription
         else:
-            print "do_lex_lookup can't handle token_class %s"%(node.get("token_class"))
+            print("do_lex_lookup can't handle token_class %s"%(node.get("token_class")))
             sys.exit(1)
 
         node.set("pronunciation", pronunciation)
@@ -191,7 +192,7 @@ def add_segments_from_label(utt, input_label='time_lab', target_nodes='//Token',
         if lab_token == utt_token.get(target_attribute):
             pass
         else:
-            print "Labels and utt content do not match"
+            print("Labels and utt content do not match")
             sys.exit(1)    
 
     ### Now overwrite target_attribute in the target_nodes with names of segments in labels,
@@ -294,11 +295,11 @@ def add_segments_and_states_from_label(utt, input_label='time_lab', target_nodes
 
     if len(padded_labels) != len(utt_tokens):
         utt_tokens_strings = [etree.tostring(node) for node in utt_tokens]
-        print "padded_labels and utt_tokens don't match:"
+        print("padded_labels and utt_tokens don't match:")
         for pair in zip(padded_labels, utt_tokens_strings):
-            print pair
-        print (len(padded_labels),  len(utt_tokens))
-        print "padded_labels and utt_tokens don't match"
+            print(pair)
+        print((len(padded_labels),  len(utt_tokens)))
+        print("padded_labels and utt_tokens don't match")
         sys.exit(1)
 
 

@@ -5,6 +5,7 @@
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
 
+from __future__ import print_function
 import sys, os
 from string import strip
 import codecs
@@ -33,7 +34,7 @@ def main_work():
     # ======== Get stuff from command line ==========
 
     def usage():
-        print "Usage: ......  "
+        print("Usage: ......  ")
         sys.exit(1)
 
     # e.g. 
@@ -64,7 +65,7 @@ def main_work():
     text = [line.strip('" ') for line in text]    
 
     for (name, words) in zip(names, text):
-        print "Write text of utt %s, from %s to utf-8"%(name, source_encoding)
+        print("Write text of utt %s, from %s to utf-8"%(name, source_encoding))
         f=codecs.open(os.path.join(text_dir, name + ".txt"), "w", target_encoding)
         f.write(words)
         f.close()

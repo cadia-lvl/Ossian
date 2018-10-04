@@ -4,11 +4,12 @@
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
+from __future__ import absolute_import
 import os
 import sys
 import re
 from naive.naive_util import *
-from Utterance import *
+from .Utterance import *
 
 class Corpus():
     def __init__(self, filelist):

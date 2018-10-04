@@ -5,6 +5,7 @@
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
 
+from __future__ import print_function
 import os
 import copy
 import glob
@@ -59,14 +60,14 @@ class UtteranceProcessor(object):
         ## example of getting attribute from config, converting type and giving default:
         self.i = int(self.config.get('arbitrary_int', 5)) 
         
-        raise NotImplementedError, "load() method should be provided by subclass '%s'"%(self.__class__)
+        raise NotImplementedError("load() method should be provided by subclass '%s'"%(self.__class__))
     
     
     def apply_to_utt(self, utterance, voice_mode="runtime", save=False):
 
         if not voice_mode=='runtime':
             if not utterance.get(self.apply_to_utts_which_have):
-                print "s",
+                print("s", end=' ')
                 return
             ## self.apply_to_utts_which_have
 
@@ -76,16 +77,16 @@ class UtteranceProcessor(object):
         ## check this processor hasn't already been used on utt:
         proc_used = utterance.get("processors_used").split(",")
         if self.processor_name in proc_used:
-            print "u",
+            print("u", end=' ')
             return  ## don't do anything
         
         if utterance.get("status") != "OK":
-            print "-",
+            print("-", end=' ')
             return
 
         ## Add the name of the processor to the utt -- don't apply a processor 2ce:
         utterance.set("processors_used", utterance.get("processors_used") + "," + self.processor_name)
-        print "p",        
+        print("p", end=' ')        
         self.process_utterance(utterance)
         if save: utterance.save()
 
@@ -116,7 +117,7 @@ class UtteranceProcessor(object):
         This method can be provided in subclasses which require training to specify what is 
         actually done -- relevant utterances already selected by train method.
         """
-        print "          (This processor requires no training)"
+        print("          (This processor requires no training)")
         self.config["is_trained"] = True
 
     def get_location(self):
@@ -199,7 +200,7 @@ class SUtteranceProcessor(object):
 
         if not voice_mode=='runtime':
             if not utterance.get(self.apply_to_utts_which_have):
-                print "s",
+                print("s", end=' ')
                 return
             ## self.apply_to_utts_which_have
 
@@ -209,17 +210,16 @@ class SUtteranceProcessor(object):
         ## check this processor hasn't already been used on utt:
         proc_used = utterance.get("processors_used").split(",")
         if self.processor_name in proc_used:
-            print "u",
+            print("u", end=' ')
             return  ## don't do anything
         
         if utterance.get("status") != "OK":
-            # ABN: original: utterance.get_filename() - not valid, get_filename takes file-type as argument.
-            print " - status not OK: " + utterance.get_utterance_filename(),
+            print(" - status not OK: " + utterance.get_filename('txt'), end=' ')
             return
 
         ## Add the name of the processor to the utt -- don't apply a processor 2ce:
         utterance.set("processors_used", utterance.get("processors_used") + "," + self.processor_name)
-        print "p",        
+        print("p", end=' ')        
         self.process_utterance(utterance)
         if save: utterance.save()
 
@@ -250,7 +250,7 @@ class SUtteranceProcessor(object):
         This method can be provided in subclasses which require training to specify what is 
         actually done -- relevant utterances already selected by train method.
         """
-        print "          (This processor requires no training)"
+        print("          (This processor requires no training)")
         self.is_trained = True
 
     def get_location(self):

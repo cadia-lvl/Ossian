@@ -5,7 +5,8 @@
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
 
-from UtteranceProcessor import SUtteranceProcessor
+from __future__ import absolute_import
+from scripts.processors.UtteranceProcessor import SUtteranceProcessor
 from util.NodeProcessors import add_phrase_tags, restructure
 
 class PhraseMaker(SUtteranceProcessor):

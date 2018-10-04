@@ -3,6 +3,7 @@
 ## Project: Simple4All - November 2013 - www.simple4all.org 
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
   
+from __future__ import print_function
 import sys
 import re
 import os
@@ -42,7 +43,7 @@ def main_work():
     filtered = []
     
     for line in questions:
-        print line
+        print(line)
         line = line.strip()
         if line != '':
             

@@ -4,6 +4,7 @@
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
 
+from __future__ import print_function
 import sys
 import re
 import os
@@ -99,10 +100,10 @@ def main_work():
        output_wavefile = os.path.join(output_dir, base + '.wav')
        text = ' '.join(readlist(filename))
        try:
-           print text
+           print(text)
        except:
-           print '  '   ## weird characgers
-       print base
+           print('  ')   ## weird characgers
+       print(base)
        if opts.output_utt:
            voice.synth_utterance(text, output_wavefile=output_wavefile, \
                         output_uttfile=os.path.join(opts.output_utt, base + '.utt'),\

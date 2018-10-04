@@ -4,6 +4,7 @@
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
+from __future__ import print_function
 import glob
 import shutil
 from processors.UtteranceProcessor import SUtteranceProcessor
@@ -72,7 +73,7 @@ class SegmentAligner(SUtteranceProcessor):
             
         if not (utt.has_external_data(self.acoustic_feature_filetype) and \
                                         utt.has_external_data(self.input_label_filetype)):
-            print "No initial label and/or features for %s"%(utt.get('utterance_name'))
+            print("No initial label and/or features for %s"%(utt.get('utterance_name')))
             utt.set("status", "alignment_failed")
             return            
             
@@ -101,7 +102,7 @@ class SegmentAligner(SUtteranceProcessor):
         
         time_lab = utt.get_filename(self.output_label_filetype)
         if not os.path.isfile(time_lab):
-            print "No alignment produced for %s"%(utt.get('utterance_name'))
+            print("No alignment produced for %s"%(utt.get('utterance_name')))
             utt.set("status", "alignment_failed")
             return
             
@@ -167,12 +168,12 @@ class SegmentAligner(SUtteranceProcessor):
 
         ## Double check not trained:
         if self.trained:
-            print "Aligner already trained!"
+            print("Aligner already trained!")
             return
 
         ## Else proceed to training:
         train_location = os.path.join(self.model_dir, "training")
-        print "\n          Training aligner -- see %s/log.txt\n"%(train_location) 
+        print("\n          Training aligner -- see %s/log.txt\n"%(train_location)) 
         if not os.path.isdir(train_location):
             os.makedirs(train_location)
       
@@ -249,7 +250,7 @@ class StateAligner(SegmentAligner):
             
         if not (utt.has_external_data(self.acoustic_feature_filetype) and \
                                         utt.has_external_data(self.input_label_filetype)):
-            print "No initial label and/or features for %s"%(utt.get('utterance_name'))
+            print("No initial label and/or features for %s"%(utt.get('utterance_name')))
             utt.set("status", "alignment_failed")
             return            
             
@@ -270,7 +271,7 @@ class StateAligner(SegmentAligner):
         
         time_lab = utt.get_filename(self.output_label_filetype)
         if not os.path.isfile(time_lab):
-            print "No alignment produced for %s"%(utt.get('utterance_name'))
+            print("No alignment produced for %s"%(utt.get('utterance_name')))
             utt.set("status", "alignment_failed")
             return
             

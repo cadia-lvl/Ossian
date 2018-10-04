@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import unicodedata
 import codecs
 import sys
@@ -122,7 +123,7 @@ def main_work():
 
     for l in lines:
         letters = latinise_indian_script_string(l)
-        print u" ".join(letters).encode('utf-8')
+        print(u" ".join(letters).encode('utf-8'))
    
 
 if __name__=="__main__":

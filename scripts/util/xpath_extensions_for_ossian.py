@@ -6,6 +6,7 @@
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 ## April 2015 
 
+from __future__ import print_function
 import sys
 import lxml
 from lxml import etree
@@ -16,7 +17,7 @@ from lxml.etree import *
 
 ## This is based on a function sent by Antti -- Oliver turned it into an xpath extension:
 def simple_count(context, child, ancestor, count):
-    print context, child, ancestor, count
+    print(context, child, ancestor, count)
     assert count in ['preceding', 'following', 'sum'], count
     ancestor = context.context_node.xpath('./ancestor::'+ancestor)
     target = context.context_node.xpath('./ancestor-or-self::'+child)

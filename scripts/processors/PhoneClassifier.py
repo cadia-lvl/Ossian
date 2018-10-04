@@ -3,7 +3,9 @@
 
 ## TODO: utterance.xpath uses hardcoded xpaths through out...
 
-from UtteranceProcessor import *
+from __future__ import print_function
+from __future__ import absolute_import
+from .UtteranceProcessor import *
 import logging
 import os
 import re
@@ -11,7 +13,7 @@ import default.const as c
 import unicodedata
 from math import log
 from configobj import ConfigObj
-from BasicTokenisers import RegexClassifier
+from .BasicTokenisers import RegexClassifier
 from collections import defaultdict
 
 class PhoneClassifier(UtteranceProcessor):
@@ -65,7 +67,7 @@ class PhoneClassifier(UtteranceProcessor):
         # get legal consonant clusters of onsets and codas
         quoted_cons = [re.escape(c) for c in consonants]
         cons = u"|".join(quoted_cons)
-        print cons
+        print(cons)
         legal_onsets =self._legal(tokens, '((?:%s|\s)+).*' %cons)
         legal_codas = self._legal(tokens, '.*?((%s|\s)+)$' %cons)
 

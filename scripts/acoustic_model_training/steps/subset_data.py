@@ -3,6 +3,7 @@
 ## Project: Simple4All - November 2013 - www.simple4all.org 
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
   
+from __future__ import print_function
 import sys
 import re
 import os
@@ -39,7 +40,7 @@ def main_work():
     
     s = re.search('(\d+)(min|examples)', opts.choose)
     #(quantity, kind) = s.groups
-    print s.groups() # (quantity, kind) 
+    print(s.groups()) # (quantity, kind) 
     sys.exit('www')
     # ===============================================
     
@@ -74,12 +75,12 @@ def main_work():
     ## 2) Make mlfs and model lists for monophones and fullcontext phones:
     comm=BIN+"""/HLEd -A -D -T 1 -V -l '*' -n %s -i %s -S %s %s
                 """%(fulllist, fullmlf, lablist, nullhed(opts.outdir))
-    print comm
+    print(comm)
     os.system(comm)
     
     comm=BIN+"""/HLEd -A -D -T 1 -V -l '*' -n %s -i %s -S %s -m %s %s
                 """%(monolist, monomlf, lablist, nullhed(opts.outdir), fullmlf)
-    print comm
+    print(comm)
     os.system(comm)
     
 

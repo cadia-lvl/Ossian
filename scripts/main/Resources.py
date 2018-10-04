@@ -6,6 +6,7 @@
 
 
 
+from __future__ import print_function
 import default.fnames as fname
 import default.const as c
 
@@ -41,8 +42,8 @@ class Resources(object):  ## osw: no longer subclass of ConfiguredComponent
         self.lang = init_config["language"]
         self.configuration = init_config["configuration"]
             
-        if not init_config.has_key('DIRS'):
-            print "ERROR: paths not defined for resources."
+        if 'DIRS' not in init_config:
+            print("ERROR: paths not defined for resources.")
             sys.exit(1)
         
                 ### simplification for now: no separate language level models
@@ -123,16 +124,16 @@ class Resources(object):  ## osw: no longer subclass of ConfiguredComponent
         else:
                 file = os.path.join(self.path[rtype],file)
         if key in self.resources:
-            print " multiple resources with the same name: "+key
+            print(" multiple resources with the same name: "+key)
         self.resources[key] = file
         return file
 
     def has_key(self, key):
-        return self.resources.has_key(key) 
+        return key in self.resources 
 
     def get(self, key):
         if key not in self.resources:
-            print "ERROR: resource "+key+ "not available"
+            print("ERROR: resource "+key+ "not available")
             
             sys.exit(1)
 
@@ -148,7 +149,7 @@ class Resources(object):  ## osw: no longer subclass of ConfiguredComponent
                 #print "path exists, ok"
                 pass
             else:
-                print "absolute path does not exist and will not be created", name
+                print("absolute path does not exist and will not be created", name)
                 sys.exit(1)
         else:
             name = "/".join([self.path[type],  name])
@@ -164,12 +165,12 @@ class Resources(object):  ## osw: no longer subclass of ConfiguredComponent
 
     def get_processors(self, config):
         
-        print config
+        print(config)
     
-        if not config.has_key("run_mode") or not config.has_key(config["run_mode"]):
-            print "ERROR: called with mode '"+config["run_mode"]+"', which is not defined in the config file."
+        if "run_mode" not in config or config["run_mode"] not in config:
+            print("ERROR: called with mode '"+config["run_mode"]+"', which is not defined in the config file.")
             sys.exit(1)
-        print "what: ",config[config["run_mode"]]
+        print("what: ",config[config["run_mode"]])
 
         return config[config["run_mode"]].walk(self._load_item, call_on_sections=False)
 

@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
 from configobj import ConfigObj
-from UtteranceProcessor import *
+from .UtteranceProcessor import *
 #import util.NodeProcessors
 import logging
 import os

@@ -32,7 +32,7 @@ def get_speech(infile, dim, remove_htk_header=False):
         data = data[3:]  ## 3 floats correspond to 12 byte htk header
 
     assert len(data) % float(dim) == 0,"Bad dimension!"
-    m = len(data) / dim
+    m = int(len(data) / dim)
     data = array(data).reshape((m,dim))
     return data
 
@@ -47,17 +47,22 @@ def write_floats(data, outfile):
     format = str(m)+"f"
 
     packed = struct.pack(format, *data)
-    f = open(outfile, "w")
-    f.write(packed)
-    f.close()
+    #f = open(outfile, "w")
+    #f.write(packed)
+    #f.close()
+    with open(outfile, 'wb') as f:
+        f.write(packed)
 
 def read_floats(infile):
-    f = open(infile, "r")
-    l = os.stat(infile)[6]  # length in bytes
-    data = f.read(l)        # = read until bytes run out (l)
-    f.close()
+    #f = open(infile, "r")
+    #l = os.stat(infile)[6]  # length in bytes
+    #data = f.read(l)        # = read until bytes run out (l)
+    #f.close()
+    with open(infile, 'rb') as f:
+        data = f.read()
 
-    m = l / 4               
+    l = os.stat(infile)[6]
+    m = int(l / 4)               
     format = str(m)+"f"
 
     unpacked = struct.unpack(format, data)

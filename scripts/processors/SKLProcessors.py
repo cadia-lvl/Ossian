@@ -9,13 +9,15 @@
 # implemented in scikit-learn (http://scikit-learn.org/stable)
 # 
 
+from __future__ import print_function
+from __future__ import absolute_import
 import os
 import numpy as np
 import pickle
 from sklearn import tree
 from sklearn.feature_extraction import DictVectorizer
 
-from UtteranceProcessor import SUtteranceProcessor
+from scripts.processors.UtteranceProcessor import SUtteranceProcessor
 import logging
 import default.const as c
 
@@ -101,7 +103,9 @@ class SKLDecisionTree(SUtteranceProcessor):
             except:
                 pass
 
-            node.set(self.output_attribute, unicode(decision)) 
+            # node.set(self.output_attribute, unicode(decision))
+            node.set(self.output_attribute, str(decision)) 
+ 
                         ## TODO: where is best place to convert to unicode?
 
 
@@ -135,23 +139,23 @@ class SKLDecisionTree(SUtteranceProcessor):
         y_data = y_vectoriser.fit_transform(y_data).toarray()
       
         if False:
-            print x_data
-            print y_data
+            print(x_data)
+            print(y_data)
         
         ## 2) train classifier:
         model = tree.DecisionTreeClassifier(min_samples_leaf=self.min_samples_leaf)
 
         model.fit(x_data, y_data) 
-        print '\n Trained classifier: '
-        print model
-        print '\n Trained x vectoriser:'
-        print x_vectoriser
-        print 'Feature names:'
-        print x_vectoriser.get_feature_names()
-        print '\n Trained y vectoriser:'
-        print y_vectoriser
-        print 'Feature names:'
-        print y_vectoriser.get_feature_names()
+        print('\n Trained classifier: ')
+        print(model)
+        print('\n Trained x vectoriser:')
+        print(x_vectoriser)
+        print('Feature names:')
+        print(x_vectoriser.get_feature_names())
+        print('\n Trained y vectoriser:')
+        print(y_vectoriser)
+        print('Feature names:')
+        print(y_vectoriser.get_feature_names())
         
         ## 3) Save classifier by pickling:
         output = open(self.model_file, 'wb')

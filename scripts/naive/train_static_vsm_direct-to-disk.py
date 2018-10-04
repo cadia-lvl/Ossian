@@ -22,6 +22,7 @@
 #    There are some notes in the script about command line arguments.
 
 
+from __future__ import print_function
 import sys
 import os
 import pickle
@@ -52,7 +53,7 @@ def train_static_vsm(textfile_in, usewords, stored_model, w, rank, unseen_method
     ## Check we will be able to make output where specified:
     working,tail = os.path.split(stored_model)
     if not os.path.isdir(working):
-        print 'Path %s does not exist'%(working)
+        print('Path %s does not exist'%(working))
         sys.exit(1)
 
 
@@ -106,18 +107,18 @@ def train_static_vsm(textfile_in, usewords, stored_model, w, rank, unseen_method
     ## 3) COMPUTE TRANSFORM, IMPOSE IT ON TRAINING DATA
     ## ------------------------------------------------
 
-    print "Reading C cooc corpus..."
+    print("Reading C cooc corpus...")
 
     C = corpora.MmCorpus(stored_model + ".MM")
 
-    print 'Corpus C read:'
-    print C
-    print
+    print('Corpus C read:')
+    print(C)
+    print()
 
-    print "Transform  C cooc corpus ..."
+    print("Transform  C cooc corpus ...")
     lsi_C = models.LsiModel(C,  numTopics=rank)
 
-    print "Transform C cooc data..."
+    print("Transform C cooc data...")
     transformed_C = lsi_C[C]
 
 
@@ -166,7 +167,7 @@ def pickle_data(data, fname):
     f.close()
 
 def unpickle_data(fname):
-    print '  *** unpickle_data *** '
+    print('  *** unpickle_data *** ')
     assert os.path.isfile(fname),'File %s doens\'t exist'%(fname)
 
     f=open(fname, "r")
@@ -209,7 +210,7 @@ def add_unseen_symbol_method_A(text,holdout=0.10):
     The tokens of the heldout set absent from the rest of the corpus are rewritten _UNSEEN_.
     """
     devset_length=int(len(text)*float(holdout))
-    print 'account for unseen tokens using %s words out of %s (%s)'%(devset_length,len(text),holdout)
+    print('account for unseen tokens using %s words out of %s (%s)'%(devset_length,len(text),holdout))
     holdout=text[:devset_length]
     rest   =text[devset_length:]
     types={}
@@ -224,9 +225,9 @@ def add_unseen_symbol_method_A(text,holdout=0.10):
     ho_types = {}
     for token in holdout:
         ho_types[token]=token
-    print "%s types in whole text of %s tokens"%(len(all_types), len(text))
-    print "%s types in holdout section of %s tokens"%(len(ho_types), len(holdout))
-    print "%s types in main section of %s tokens"%(len(types), len(rest))
+    print("%s types in whole text of %s tokens"%(len(all_types), len(text)))
+    print("%s types in holdout section of %s tokens"%(len(ho_types), len(holdout)))
+    print("%s types in main section of %s tokens"%(len(types), len(rest)))
 
 
     holdout=[types.get(word, '_UNSEEN_') for word in holdout]  ## rewrite
@@ -265,8 +266,8 @@ def gensim_corpus_to_textfile(corpus, fname, impose_unitlength=True, append_mean
     n = find_ncolumns_in_gensim_corpus(corpus)
     m = len(corpus)
 
-    print '  *** gensim_corpus_to_textfile *** '
-    print 'm: %s   n: %s'%(m,n)
+    print('  *** gensim_corpus_to_textfile *** ')
+    print('m: %s   n: %s'%(m,n))
     f=open(fname, "w")
     document_number=0
 
@@ -321,8 +322,8 @@ def shelve_gensim_corpus(corpus, fname, lemma_list, impose_unitlength=True, appe
     n = find_ncolumns_in_gensim_corpus(corpus)
     m = len(corpus)
 
-    print '  *** shelve_gensim_corpus *** '
-    print 'm: %s   n: %s'%(m,n)
+    print('  *** shelve_gensim_corpus *** ')
+    print('m: %s   n: %s'%(m,n))
     f = shelve.open(fname)
     document_number=0
 
@@ -401,7 +402,7 @@ def get_schutze_01_cooc_matrix_gensim_direct_to_disk(words,feature_words,target_
     rows, different parameter settings are needed to make richer contexts...)
     """
 
-    print "initialise random access matrix"
+    print("initialise random access matrix")
 
     ## 1) write to binary matrix format, random access: Init. the matrix file:
     import struct
@@ -473,12 +474,12 @@ def get_schutze_01_cooc_matrix_gensim_direct_to_disk(words,feature_words,target_
     nrows=len(target_words_dict)
     nonz=0
 
-    print "Pass through corpus..."
+    print("Pass through corpus...")
 
     for i in range(1, len(words)-1):
 
         if i%100000==0:
-            print "%s tokens done... "%(i)
+            print("%s tokens done... "%(i))
 
         left = words[i-1]
         centre = words[i]
@@ -510,7 +511,7 @@ def get_schutze_01_cooc_matrix_gensim_direct_to_disk(words,feature_words,target_
     for line_num in range(nrows):
 
         if line_num%10000==0:
-            print 'Written %s lines to final'%(line_num)
+            print('Written %s lines to final'%(line_num))
 
         ## get line from binary matrix
         data=retrieve_row(f, line_num, entry_size, entry_format, rowlength)
@@ -629,7 +630,7 @@ def get_schutze_02_cooc_matrix_gensim_direct_to_disk(words,feature_words,target_
     for i in range(1, len(words)-1):
 
         if i%100000==0:
-            print "%s words done"%(i)
+            print("%s words done"%(i))
 
         left = words[i-1]
         centre = words[i]
@@ -673,7 +674,7 @@ def get_schutze_02_cooc_matrix_gensim_direct_to_disk(words,feature_words,target_
     for line_num in range(nrows):
 
         if line_num%10000==0:
-            print 'Written %s lines to final'%(line_num)
+            print('Written %s lines to final'%(line_num))
 
         ## get line from binary matrix
         data=retrieve_row(f, line_num, entry_size, entry_format, rowlength)
@@ -697,7 +698,7 @@ def get_schutze_02_cooc_matrix_gensim_direct_to_disk(words,feature_words,target_
     for line_num in range(nrows):
 
         if line_num%10000==0:
-            print 'Written %s lines to final'%(line_num)
+            print('Written %s lines to final'%(line_num))
 
         ## get line from binary matrix
         data=retrieve_row(f, line_num, entry_size, entry_format, rowlength)
@@ -722,7 +723,7 @@ def get_schutze_02_cooc_matrix_gensim_direct_to_disk(words,feature_words,target_
     for i in range(1, len(words)-1):
 
         if i%100000==0:
-            print "%s words done"%(i)
+            print("%s words done"%(i))
 
         left_ix   = target_words_dict[words[i-1]]
         centre_ix = target_words_dict[words[i]]
@@ -755,41 +756,41 @@ if __name__=="__main__":
     # ======== Get stuff from command line ==========
 
     def usage():
-        print "Script was called like:"
-        print sys.argv
-        print
-        print "\n\n\n"
-        print "Script to train continuous word/letter/etc. space models"
-        print "Usage: train_vsm_type_1.py text_corpus usewords stored_model w rank unseen_method"
-        print ""
-        print "   where text_corpus  --   is a simple ascii text file (1 sentence per line [ignored]),"
-        print "                           already lowercased / tokenised / etc. as required "
-        print "          usewords     --  Take first usewords words of corpus -- 0 for whole corpus  "
-        print "          stored_model --  stem for output files "
-        print "         w             --  number of feature words to use as context"
-        print "         rank          --  number of dimensions of transformed space to keep"
-        print "         unseen_method --  method used for training model for unseen words:"
-        print "                           * If 0 use method A:      A portion of the training corpus "
-        print "                             ('holdout': default 10%) is set aside while a list of seen "
-        print "                             types is compiled from the remainder of the corpus. The "
-        print "                             tokens of the heldout set absent from the rest of the corpus "
-        print "                             are rewritten _UNSEEN_."
-        print "                           * If > 0: Rewrite words with count <= threshold as _UNSEEN_"
-        print
-        print " E.g.:"
-        print "~/proj/whole_system/script/train_vsm_type_1.py ~/pr/distrib_pos/wsj.txt 5000 ~/pr/TEMP/vsm_wsj_test4 250 50 1"
-        print ""
-        print " _UNSEEN_ and _MEAN_ are added to vocab and features are made for them."
-        print
-        print "Outputs: "
-        print
-        print "<stored_model>.dat   ---   raw co-occurrance matrix as text file"
-        print "<stored_model>.trans ---   transformed training data as text file"
-        print "<stored_model>.lemma ---   vocab list matching *.trans line-for-line: _UNSEEN_ and _MEAN_ are added    "
-        print "                          _MEAN_ not in *.dat -- *.dat 1 line shorter.     "
-        print "<stored_model>.model ---   the pickled gensim model (for folding new stuff in instead "
-        print "                           of using _UNSEEN_)  "
-        print "\n\n\n"
+        print("Script was called like:")
+        print(sys.argv)
+        print()
+        print("\n\n\n")
+        print("Script to train continuous word/letter/etc. space models")
+        print("Usage: train_vsm_type_1.py text_corpus usewords stored_model w rank unseen_method")
+        print("")
+        print("   where text_corpus  --   is a simple ascii text file (1 sentence per line [ignored]),")
+        print("                           already lowercased / tokenised / etc. as required ")
+        print("          usewords     --  Take first usewords words of corpus -- 0 for whole corpus  ")
+        print("          stored_model --  stem for output files ")
+        print("         w             --  number of feature words to use as context")
+        print("         rank          --  number of dimensions of transformed space to keep")
+        print("         unseen_method --  method used for training model for unseen words:")
+        print("                           * If 0 use method A:      A portion of the training corpus ")
+        print("                             ('holdout': default 10%) is set aside while a list of seen ")
+        print("                             types is compiled from the remainder of the corpus. The ")
+        print("                             tokens of the heldout set absent from the rest of the corpus ")
+        print("                             are rewritten _UNSEEN_.")
+        print("                           * If > 0: Rewrite words with count <= threshold as _UNSEEN_")
+        print()
+        print(" E.g.:")
+        print("~/proj/whole_system/script/train_vsm_type_1.py ~/pr/distrib_pos/wsj.txt 5000 ~/pr/TEMP/vsm_wsj_test4 250 50 1")
+        print("")
+        print(" _UNSEEN_ and _MEAN_ are added to vocab and features are made for them.")
+        print()
+        print("Outputs: ")
+        print()
+        print("<stored_model>.dat   ---   raw co-occurrance matrix as text file")
+        print("<stored_model>.trans ---   transformed training data as text file")
+        print("<stored_model>.lemma ---   vocab list matching *.trans line-for-line: _UNSEEN_ and _MEAN_ are added    ")
+        print("                          _MEAN_ not in *.dat -- *.dat 1 line shorter.     ")
+        print("<stored_model>.model ---   the pickled gensim model (for folding new stuff in instead ")
+        print("                           of using _UNSEEN_)  ")
+        print("\n\n\n")
 
         sys.exit(1)
 
@@ -807,7 +808,7 @@ if __name__=="__main__":
     except:
         usage()
 
-    print [usewords]
+    print([usewords])
     train_static_vsm(textfile_in, usewords, stored_model, w, rank, unseen_method)
 
 

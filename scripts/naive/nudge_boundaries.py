@@ -19,13 +19,15 @@ This script nudges phone boundaries as necessary to make sure that each monophon
 1 instance longer than minumum_duration (ms). This is only a temporary work-around.
 
 '''
+from __future__ import print_function
+from __future__ import absolute_import
 
 import sys
 import os
 import re
 
 
-from naive_util import *
+from .naive_util import *
 
 def main_work():
 
@@ -34,7 +36,7 @@ def main_work():
     # ======== Get stuff from command line ==========
 
     def usage():
-        print "Usage: ......  "
+        print("Usage: ......  ")
         sys.exit(1)
 
     # e.g. 
@@ -79,7 +81,7 @@ def main_work():
             if length >= minimum_duration:    
                 phones[phone] = 0  # 0 means no problem
                 
-    print phones
+    print(phones)
 #    
     ## 2nd pass -- fix 1st instance of the problem segments     
     for labname in lab_list:
@@ -149,11 +151,11 @@ def main_work():
                 if val==1:
                     bad_utts.extend(phone_to_labs[key])
         bad_utts = dict(zip(bad_utts, bad_utts)).keys() ## unique it
-        print 'Warning -- phone lengths are problematic: remove the bad utterances: %s'%(" ".join(bad_utts))
+        print('Warning -- phone lengths are problematic: remove the bad utterances: %s'%(" ".join(bad_utts)))
         for utt_name in bad_utts:
             os.remove(os.path.join(label_outdir, utt_name))
     else:
-        print "phones fixed OK"
+        print("phones fixed OK")
 
 
 

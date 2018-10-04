@@ -5,6 +5,7 @@
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
 
+from __future__ import print_function
 import codecs
 import unicodedata
 import re
@@ -24,12 +25,12 @@ utterance_end_token = "_UTTEND_"   ## where to put global constants like this?
 ##-------- unicode handling --------
 
 def safetext(unicode_string):
-    unicode_string = unicode(unicode_string)
+    #unicode_string = unicode(unicode_string)
     safetext = ''
     for char in unicode_string:
         safetext += unicode_character_to_safetext(char)    
     return safetext
-    
+
 def unicode_character_to_safetext(char):
     '''
     work one out. The substitute 
@@ -120,7 +121,7 @@ def readlist(filename, uni=True, check_unicode_database=False):
         test = [in_unicode_table(line) for line in data]
         data = [line for (line, value) in zip(data, test) if value==1]
         if len(test)-sum(test) > 0:
-            print "Skipped %s lines of %s because couldn't find a character in unicode database"%(len(test)-sum(test), filename)
+            print("Skipped %s lines of %s because couldn't find a character in unicode database"%(len(test)-sum(test), filename))
     return data
 
 
@@ -132,7 +133,8 @@ def writelist(data, filename, uni=False):
     '''
 
     if uni:
-        data=[unicode(x) for x in data]
+        # data=[unicode(x) for x in data]
+        data=[str(x) for x in data] 
         f = codecs.open(filename, 'w', encoding='utf-8')
     else:
         data=[str(x) for x in data]
@@ -201,8 +203,8 @@ def read_htk_label(fname):
         elif len(line)==4:
             (start,end,segment,word) = line
         else:
-            print "Bad line length:"
-            print line
+            print("Bad line length:")
+            print(line)
             sys.exit(1)    
         end = htk_to_ms(int(end))
         start = htk_to_ms(int(start))                
@@ -317,7 +319,7 @@ def read_feature_lexicon(input_fname, dims_to_keep=0):
     
     default dims_to_keep = 0 means keep all
     """
-    print "reading " + input_fname + " ..."
+    print("reading " + input_fname + " ...")
     lex={}
     data = readlist(input_fname)
 
@@ -441,16 +443,16 @@ def flatten_mapping(mapping, sort_by=False, reverse_sort=False):
         #print [line]
         newline = []
         for item in line:
-            if type(item) == unicode:
+            if type(item) == str:
                 newline.append(item)
             else:
-                newline.append(unicode(item)) 
+                newline.append(str(item)) 
         newdata.append(newline)
     data = newdata
 
     for line in data:
         for item in line:
-            assert unicode("\t") not in item
+            assert str("\t") not in item
 
     data = [(line[0], "\t".join(line[1:])) for line in data]
 
@@ -561,7 +563,8 @@ def fix_data_type(data):
         try:
             converted_data = float(data)
         except:
-            converted_data = unicode(data) 
+            # converted_data = unicode(data)
+            converted_data = str(data) 
     return converted_data
 #
 def final_attribute_name(xpath):
@@ -593,7 +596,7 @@ def add_htk_header(datafile, floats_per_frame, frameshift_ms):
         framesize = 4 * floats_per_frame        
         if filesize % float(framesize) != 0:
             sys.exit('add_htk_header: not valid framesize (%s floats)'%(floats_per_frame))
-        nframe = filesize / framesize
+        nframe = int(filesize / framesize)
         header = struct.pack('iihh', nframe, ms_to_htk(frameshift_ms), framesize, 9)
 
         f = open(datafile, 'rb')
@@ -661,7 +664,7 @@ def str2bool(s):
             self.add_terminal_tokens = False
     
     '''
-    if type(s) in [str, unicode]:
+    if type(s) is str:
         s = s.strip(' \n')
         if s in ['True', 'yes']:
             return True

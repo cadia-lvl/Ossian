@@ -4,6 +4,7 @@
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
+from __future__ import print_function
 import sys
 #import re
 import naive.naive_util
@@ -21,7 +22,7 @@ def main_work():
     # ======== Get stuff from command line ==========
 
     def usage():
-        print "Usage: ......  "
+        print("Usage: ......  ")
         sys.exit(1)
 
     # e.g. 
@@ -60,12 +61,12 @@ def main_work():
 
 
 
-    print " -- Open the existing voice"
+    print(" -- Open the existing voice")
 
     voice = Voice(config_file=voice_config)
 
 
-    print " -- Make an utterance processor from a (trained) acoustic model   "
+    print(" -- Make an utterance processor from a (trained) acoustic model   ")
 
     ### This will only perform work where an utt does not have a wavefile attached:
     parameter_generator = AcousticModel(config_file=voice_components + "/parameter_generator.cfg",
@@ -95,10 +96,10 @@ def main_work():
     voice.add_processor(voice_components + "/waveform_synthesiser.cfg")
     voice.add_processor(voice_components + "/wave_player.cfg")
 
-    print " -- Save voice"
+    print(" -- Save voice")
     voice.save()
 
-    print " -- Synthesize a test utterance (from some Spanish text...)"
+    print(" -- Synthesize a test utterance (from some Spanish text...)")
     ## Use the voice to synth a test utterance:
     voice.synth_utterance("Esto es: una prueba.")
 

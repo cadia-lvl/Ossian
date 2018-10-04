@@ -4,6 +4,7 @@
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
+from __future__ import print_function
 import sys
 from naive.naive_util import *
 
@@ -243,7 +244,7 @@ if __name__=="__main__":
     # ======== Get stuff from command line ==========
 
     def usage():
-        print "Usage: ......  "
+        print("Usage: ......  ")
         sys.exit(1)
 
     # e.g. 
@@ -258,7 +259,7 @@ if __name__=="__main__":
     except:
         usage()
 
-    print infile
+    print(infile)
     #################################################
 
     discretise_vsm(infile, outfile, method, nbins)

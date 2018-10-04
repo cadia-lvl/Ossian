@@ -4,7 +4,9 @@
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
-from UtteranceProcessor import *
+from __future__ import print_function
+from __future__ import absolute_import
+from .UtteranceProcessor import *
 from util.NodeProcessors import *
 
 from distutils.spawn import find_executable
@@ -25,13 +27,13 @@ class WaveSynthesiser(UtteranceProcessor):
     def process_utterance(self, utt):
 
         if utt.has_attribute("waveform"):    
-            print "Utt has a natural waveform -- don't synthesise"
+            print("Utt has a natural waveform -- don't synthesise")
             return
             
         ## Check we've got everything to synthesise with:
         for filetype in ["gen_f0", "gen_mcep", "gen_bndap"]:
             if not utt.has_external_data(filetype):
-                print 'Utterance does not have filetype %s associated with it -- cannot synthesise a wave'%(filetype)
+                print('Utterance does not have filetype %s associated with it -- cannot synthesise a wave'%(filetype))
                 return
 
         fzero = utt.get_filename("gen_f0")
