@@ -8,7 +8,7 @@
 
 from __future__ import print_function
 from __future__ import absolute_import
-from UtteranceProcessor import SUtteranceProcessor
+from scripts.processors.UtteranceProcessor import SUtteranceProcessor
 from util.NodeProcessors import *
 
 from distutils.spawn import find_executable
@@ -585,7 +585,7 @@ class NNDurationPredictor(SUtteranceProcessor):
     def write_merlin_config(self, n_utts=0):
         this_directory = os.path.realpath(os.path.abspath(os.path.dirname(__file__ )))
         ossian_root = os.path.abspath(os.path.join(this_directory, '..', '..'))    
-        template_fname = os.path.join(ossian_root, 'scripts', 'merlin_interface', 'feed_forward_dnn_ossian_duration_model.conf')
+        template_fname = os.path.join(ossian_root, 'scripts', 'merlin_interface', 'feed_forward_dnn_ossian_duration_keras_model.conf')
 
         f = open(template_fname, 'r')
         config_string = f.read()
@@ -766,7 +766,7 @@ class NNAcousticPredictor(SUtteranceProcessor):
     def write_merlin_config(self, n_utts=0):
         this_directory = os.path.realpath(os.path.abspath(os.path.dirname(__file__ )))
         ossian_root = os.path.abspath(os.path.join(this_directory, '..', '..'))    
-        template_fname = os.path.join(ossian_root, 'scripts', 'merlin_interface', 'feed_forward_dnn_ossian_acoustic_model.conf')
+        template_fname = os.path.join(ossian_root, 'scripts', 'merlin_interface', 'feed_forward_dnn_ossian_acoustic_keras_model.conf')
 
         f = open(template_fname, 'r')
         config_string = f.read()

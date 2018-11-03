@@ -42,7 +42,7 @@ class UtteranceElement(etree.ElementBase):
     
     def safe_xpath(self, path, default_value='_NA_'):
         """
-        Provide padding for e.g. end-of-sentence contexts if xpath doesn't 
+        Provide padding for e.g. end-of-sentence contexts if xpath doesn't
         find anything. In order to handle different padding types (e.g. mean vector for 
         VSM features). 
         
