@@ -103,7 +103,7 @@ def main_work():
     # Go through the files a paragraph at a time, unless it's SSML in which case we parse it
     # An empty line marks the change of paragraphs in plain text files
     for line in fileinput.input(opts.files):
-       line = line.decode('utf-8').rstrip()
+       line = line.rstrip()
        t = start_clock('Synthesise sentence')
        print(line)
        if fileinput.isfirstline():
@@ -128,6 +128,7 @@ def main_work():
        else:
            para.append(line)
 
+    # Run synthesis on the utterance
     if para != []:
        voice.synth_utterance(''.join(para), output_wavefile=output_wavefile, \
                             output_labfile=output_labfile)

@@ -3,149 +3,98 @@
 ## Project: Simple4All - March 2016 - www.simple4all.org
 ## Contact: Oliver Watts - owatts@staffmail.ed.ac.uk
 
-
-
-
 from __future__ import print_function
 from __future__ import absolute_import
-from scripts.processors.UtteranceProcessor import SUtteranceProcessor
-from util.NodeProcessors import *
-
-from distutils.spawn import find_executable
-
-from naive.naive_util import readlist
-from util.speech_manip import get_speech, put_speech
-
 import sys
 import numpy as np
 import numpy
 import math
+import os
+from glob import glob
+import json
+import inspect
 
-import time
+### Add Merlin tools to import path:- Not sure this is necessary in py3 - it is
+current_dir = os.path.realpath(os.path.abspath(os.path.dirname(inspect.getfile(inspect.currentframe()))))
+sys.path.append(current_dir + '/../../tools/merlin/src/')
 
-import glob
 
+from processors.UtteranceProcessor import SUtteranceProcessor
+from util.NodeProcessors import *
+from util.speech_manip import get_speech, put_speech
 import util.Wavelets as cwt
 import util.cwt_utils
-
-from keras.models import model_from_json
-
-### Add Merlin tools to import path:-
-this_file_location = os.path.split(os.path.realpath(os.path.abspath(os.path.dirname(__file__))))[0]
-merlin_direc = os.path.join(this_file_location, '..', 'tools', 'merlin', 'src')
-sys.path.append(merlin_direc)
-
+from naive.naive_util import readlist
 from processors.FeatureExtractor import get_world_fft_and_apdim
-
+from keras_lib.model import kerasModels
+from keras_lib.data_utils import load_norm_stats
 try:
     from frontend.label_normalisation import HTSLabelNormalisation, HTSDurationLabelNormalisation
     from frontend.mlpg_fast import MLParameterGenerationFast
 except:
     sys.exit('trouble importting from merlin -- installed properly?')
 
+# this_file_location = os.path.split(os.path.realpath(os.path.abspath(os.path.dirname(__file__))))[0]
+# merlin_direc = os.path.join(this_file_location, '..', 'tools', 'merlin', 'src')
+# sys.path.append(merlin_direc)
+
 
 class NN(object):
+
     def __init__(self, model_dir):
+
+        # instantiate keras model with dummy values
+        self.keras_wrapper = kerasModels(n_in=1, hidden_layer_size=[1], n_out=1, hidden_layer_type=['tanh'])
+        self.input_dim = None
+        self.output_dim = None
+        self.scaler_inp = None
+        self.scaler_out = None
+
+        # Load the trained model and norm stats
         self.load_from_files(model_dir)
 
     def load_from_files(self, model_dir):
-        self.model_dir = model_dir
-        files = glob.glob(self.model_dir + '/*')
 
-        # print 'files in ' + self.model_dir
-        # print files
+        # find the model files
+        h5_file = glob(model_dir + '/*.h5')[0]
+        json_file = glob(model_dir + '/*.json')[0]
+        norm_stats_inp_file = glob(model_dir + '/input*.norm')[0]
+        norm_stats_out_file = glob(model_dir + '/output*.norm')[0]
 
-        norm_count = 0
+        # Load trained model from files
+        self.keras_wrapper.load_model(json_file, h5_file)
 
-        try:
-            # find the json and h5 model files
-            h5 = glob.glob(model_dir + '/*.h5')[0]
-            json = glob.glob(model_dir + '/*.json')[0]
+        # Get dimensions of the input and output
+        with open(json_file, 'r') as f:
+            model_dict = json.load(f)
+        self.input_dim = model_dict['config'][0]['config']['batch_input_shape'][1]
+        self.output_dim = model_dict['config'][-1]['config']['units']
 
-            # load json and create model
-            json_file = open(json, 'r')
-            loaded_model_json = json_file.read()
-            json_file.close()
-            self.model = model_from_json(loaded_model_json)
+        # Load the input and and output normalization objects
+        # TODO: how do I deal with the normalization method? May need to pass this into the class
+        self.scaler_inp = load_norm_stats(norm_stats_inp_file, self.input_dim, method="MVN")
+        self.scaler_out = load_norm_stats(norm_stats_out_file, self.output_dim, method="MVN")
 
-            # load weights into new model
-            self.model.load_weights(h5)
-        except IndexError as e:
-            print('error loading model: %s' % e)
+    def predict(self, inp):
 
-        # Do i have to recompile? don't think so
+        # Check that input matrix is of correct shape
+        input_dim = inp.shape[1]
+        assert input_dim == self.input_dim, (input_dim, self.input_dim)
 
-
-        # Extract normalization data from files
-        for file in files:
-            junk, base = os.path.split(file)
-            base = base.replace('.npy', '')
-
-            if base == 'NORM_OUTPUT_MEAN':
-                self.output_mean = numpy.load(file)
-                norm_count += 1
-
-            if base == 'NORM_OUTPUT_STD':
-                self.output_std = numpy.load(file)
-                norm_count += 1
-
-            if base == 'NORM_INPUT_MIN':
-                self.input_min = numpy.load(file)
-                norm_count += 1
-
-            if base == 'NORM_INPUT_MAX':
-                self.input_max = numpy.load(file)
-                norm_count += 1
-
-        assert norm_count == 4
-        self.indim = numpy.shape(self.input_min)[0]
-        self.outdim = numpy.shape(self.output_mean)[0]
-
-        self.target_max = 0.99
-        self.target_min = 0.01
-        target_diff = self.target_max - self.target_min
-        target_diff_vect = numpy.ones(numpy.shape(self.input_min)) * target_diff
-        data_diff_vect = self.input_max - self.input_min
-
-        target_diff_vect[data_diff_vect <= 0.0] = 1.0
-        data_diff_vect[data_diff_vect <= 0.0] = 1.0
-
-        self.scale_vector = target_diff_vect / data_diff_vect
-
-        # linearly rescale data values having observed min and max into a new arbitrary range min' to max':
-        # newvalue= (max'-min')/(max-min)*(value-max)+max'
-        # or
-        # newvalue= (max'-min')/(max-min)*(value-min)+min'.
-
-    def predict(self, input, input_normalisation=True, output_denormalisation=True):
-        nframe, ndim = numpy.shape(input)
-        assert ndim == self.indim, (ndim, self.indim)
-
-        ## normalise:
-        if input_normalisation:
-            input = input - self.input_min
-            input = input * self.scale_vector
-            input = input + self.target_min
+        # normalize
+        inp = self.scaler_inp.transform(inp)
 
         # Execute prediction
-        y = self.model.predict(input, verbose=1)
-        # for (i, layer) in sorted(self.layers.items()):
-        #     print i
-        #     input = numpy.dot(input, layer['W'])
-        #     input += layer['b']
-        #     if layer['activation'] == 'TANH':
-        #         input = numpy.tanh(input)
-        #     elif layer['activation'] == 'LINEAR':
-        #         pass
-        #     else:
-        #         sys.exit('unknown activation: %s' % (layer['activation']))
+        out = self.keras_wrapper.model.predict(inp, verbose=1)
 
-        ## denormalise:
-        if output_denormalisation:
-            output = y * self.output_std + self.output_mean
-        else:
-            output = y
-        return output
+        # de-normalize
+        out = self.scaler_out.inverse_transform(out)
+
+        # Check that output matrix is of correct shape
+        output_dim = out.shape[1]
+        assert output_dim == self.output_dim, (output_dim, self.output_dim)
+
+        return out
 
 
 class NNAcousticModel(NN):
@@ -153,16 +102,13 @@ class NNAcousticModel(NN):
     def __init__(self, model_dir, question_file_name,
                  silence_pattern='/2:sil/'):  ## TODO: where to handle silence pattern? Currently fragile
         super(NNAcousticModel, self).__init__(model_dir)
-        self.load_stream_info()
+        self.load_stream_info(model_dir)
         self.label_expander = HTSLabelNormalisation(question_file_name=question_file_name)
         self.param_generator = MLParameterGenerationFast()  # ParameterGeneration()
         self.silent_feature_indices = self.get_silent_feature_indices(question_file_name, silence_pattern)
 
-        std = self.output_std
-        m = numpy.shape(std)
-
-        std = std.reshape((1, self.outdim))
-
+        # TODO: get output_std out of the scaler obj
+        std = self.scaler_out.scale_.reshape(1, self.output_dim)
         self.stream_std = self.split_into_streams(std)
 
     def get_silent_feature_indices(self, question_file_name, silence_pattern):
@@ -177,8 +123,8 @@ class NNAcousticModel(NN):
                 print(question)
         return indices
 
-    def load_stream_info(self):
-        stream_info_fname = os.path.join(self.model_dir, 'stream_info.txt')
+    def load_stream_info(self, model_dir):
+        stream_info_fname = os.path.join(model_dir, 'stream_info.txt')
         assert os.path.isfile(stream_info_fname)
         stream_data = readlist(stream_info_fname)
         stream_data = [line.split(' ') for line in stream_data]
@@ -188,7 +134,7 @@ class NNAcousticModel(NN):
         outdims = [int(val) for val in outdims]
 
         ## note that indims are not network input, but input to acoustic preprocessing of data!
-        assert self.outdim == sum(outdims)
+        assert self.output_dim == sum(outdims)
         self.indims = dict(zip(self.instreams, indims))
         self.outdims = dict(zip(self.outstreams, outdims))
 
@@ -248,17 +194,21 @@ class NNAcousticModel(NN):
 
         self.world_resynth(streams, outwave)
 
-    def generate(self, htk_label_file, enforce_silence=True, mlpg=True, fill_unvoiced_gaps=0, \
+    def generate(self, htk_label_file, enforce_silence=True, mlpg=True, fill_unvoiced_gaps=0,
                  variance_expansion=1.0, vuv_thresh=0.5, fzero_scale=1.0):
+
+        # TODO: Take a good look through this function, its critical to synthesis
 
         input = self.label_expander.load_labels_with_state_alignment(htk_label_file)
         output = self.predict(input)
         streams = self.split_into_streams(output)
 
+        # TODO: decipher what is going on here, what is mlpged? Some sort of filtering?
         if mlpg:
             mlpged = {}
             for (stream, data) in streams.items():
                 if stream in self.indims:
+                    # TODO: Why is only stream_std taken? What about the mean? Does this assume minmax normalization?
                     mlpg_data = self.param_generator.generation(data, self.stream_std[stream], self.indims[stream])
                 else:
                     mlpg_data = data
@@ -275,7 +225,8 @@ class NNAcousticModel(NN):
                     statics[stream] = data
             streams = statics
 
-        ## TODO: handle F0 separately
+        # TODO: handle F0 separately
+        # TODO: this might make a big difference in voice characteristics...
         if variance_expansion > 0.0:
             new_streams = {}
             for (stream, data) in streams.items():
@@ -284,6 +235,7 @@ class NNAcousticModel(NN):
 
         # impose 0 ceiling on baps, else we get artifacts:-
         # (I think this was the problem I was trying to fix by not scaling f0 and energy previously)
+        # TODO: why do we do this?? This erases a ton of information from the bap stream!
         streams['bap'] = np.minimum(streams['bap'], np.zeros(np.shape(streams['bap'])))
 
         #         if fill_unvoiced_gaps > 0:
@@ -304,24 +256,25 @@ class NNAcousticModel(NN):
                 data[silent_frames == 1.0, :] = 0.0
                 streams[stream] = data
 
-        if 'lf0' in streams:
-            fzero = numpy.exp(streams['lf0'])
-
-            if 'vuv' in streams:
-                vuv = streams['vuv']
-                lf0 = streams['lf0']
-                fzero[vuv <= vuv_thresh] = 0.0
-
-            fzero *= fzero_scale
-
-            streams['lf0'] = fzero
+        # TODO: this changes lf0, should vuv_thresh be 0? vuv donsn't get close to 0.5... maybe vuv output is flawed... it was never un-normalized...
+        # if 'lf0' in streams:
+        #     fzero = numpy.exp(streams['lf0'])
+        #
+        #     if 'vuv' in streams:
+        #         vuv = streams['vuv']
+        #         lf0 = streams['lf0']
+        #         fzero[vuv <= vuv_thresh] = 0.0
+        #
+        #     fzero *= fzero_scale
+        #
+        #     streams['lf0'] = fzero
 
         # self.world_resynth(streams, outwave)
         return streams
 
     def split_into_streams(self, input):
         nframe, ndim = numpy.shape(input)
-        assert ndim == self.outdim, (ndim, self.outdim)
+        assert ndim == self.output_dim, (ndim, self.outdim)
 
         start = 0
         outputs = {}
@@ -457,6 +410,7 @@ class NNDurationModel(NN):
         self.label_expander = HTSDurationLabelNormalisation(question_file_name=question_file_name)
 
     def generate(self, htk_label_file, enforce_silence=False, mlpg=True, vuv_thresh=0.5, fzero_scale=1.0):
+        # TODO: sanity check: does label_expander output the correct label form? why is it called state_alignment? should perform phone alignment
         input = self.label_expander.load_labels_with_state_alignment(htk_label_file)
         output = self.predict(input)
 
@@ -540,7 +494,7 @@ class NNDurationPredictor(SUtteranceProcessor):
         this_directory = os.path.realpath(os.path.abspath(os.path.dirname(__file__)))
         ossian_root = os.path.abspath(os.path.join(this_directory, '..', '..'))
         template_fname = os.path.join(ossian_root, 'scripts', 'merlin_interface',
-                                      'feed_forward_dnn_ossian_duration_model.conf')
+                                      'feed_forward_dnn_ossian_duration_keras_model.conf')
 
         f = open(template_fname, 'r')
         config_string = f.read()
@@ -638,15 +592,14 @@ class NNDurationPredictor(SUtteranceProcessor):
 
 
 class NNAcousticPredictor(SUtteranceProcessor):
-    def __init__(self, processor_name='acoustic_predictor', input_label_filetype='dnn_lab', \
-                 output_filetype='wav', \
-                 question_file_name='questions_dnn.hed.cont', \
-                 variance_expansion=0.0, \
-                 fill_unvoiced_gaps=0, \
-                 sample_rate=16000, \
-                 alpha=0.42, \
-                 mcep_order=39
-                 ):
+    def __init__(self, processor_name='acoustic_predictor', input_label_filetype='dnn_lab',
+                 output_filetype='txt',
+                 question_file_name='questions_dnn.hed.cont',
+                 variance_expansion=0.0,
+                 fill_unvoiced_gaps=0,
+                 sample_rate=16000,
+                 alpha=0.42,
+                 mcep_order=39):
 
         self.processor_name = processor_name
         self.input_label_filetype = input_label_filetype
@@ -673,7 +626,7 @@ class NNAcousticPredictor(SUtteranceProcessor):
             ## TODO: pack up qfile too
             self.model = NNAcousticModel(self.model_dir, qfile)
             self.trained = True
-        except:
+        except AssertionError as e:
             # sys.exit('Cannot load NN model from model_dir: %s'%self.model_dir)
             print('Cannot load NN model from model_dir: %s -- not trained yet' % self.model_dir)
             self.trained = False
@@ -707,7 +660,7 @@ class NNAcousticPredictor(SUtteranceProcessor):
         this_directory = os.path.realpath(os.path.abspath(os.path.dirname(__file__)))
         ossian_root = os.path.abspath(os.path.join(this_directory, '..', '..'))
         template_fname = os.path.join(ossian_root, 'scripts', 'merlin_interface',
-                                      'feed_forward_dnn_ossian_acoustic_model.conf')
+                                      'feed_forward_dnn_ossian_acoustic_keras_model.conf')
 
         f = open(template_fname, 'r')
         config_string = f.read()
@@ -826,11 +779,11 @@ class NNAcousticPredictor(SUtteranceProcessor):
                  output data type.
         '''
 
-        comm = "%s/synth %s %s /tmp/tmp_d.lf0 /tmp/tmp.spec /tmp/tmp_d.bap /tmp/tmp.resyn.wav" % (bin_dir, fftl, sr)
+        comm = "%s/synth %s %s /tmp/tmp_d.lf0 /tmp/tmp.spec /tmp/tmp_d.bap /tmp/tmp.resyn.txt" % (bin_dir, fftl, sr)
         print(comm)
         os.system(comm)
 
-        os.system("mv /tmp/tmp.resyn.wav " + outfile)
+        os.system("mv /tmp/tmp.resyn.txt " + outfile)
         print('Produced %s' % (outfile))
 
 
@@ -925,7 +878,7 @@ p = n.generate(lfile, vuv_thresh=0.5, fzero_scale=1.0)
 
 # qfile = '/Users/owatts/repos/ossian_working/Ossian/train/sw/speakers/bible3/naive_SW6/questions_dnn.hed.cont'
 # lfile = '/afs/inf.ed.ac.uk/user/o/owatts/temp/gpu_gen/66_015.dnn_lab'
-# owave = '/afs/inf.ed.ac.uk/user/o/owatts/temp/cpu_gen/66_015.wav'
+# owave = '/afs/inf.ed.ac.uk/user/o/owatts/temp/cpu_gen/66_015.txt'
 # n = NNAcousticModel('/afs/inf.ed.ac.uk/user/o/owatts/temp/sw6_bib3_EMI', qfile)
 #
 # #data = numpy.ones((100,233)) * 1.0
@@ -937,7 +890,7 @@ p = n.generate(lfile, vuv_thresh=0.5, fzero_scale=1.0)
 '''
 qfile = '/Users/owatts/repos/ossian_working/Ossian/train/sw/speakers/bible3/naive_SW6/questions_dnn.hed.cont'
 lfile = '/afs/inf.ed.ac.uk/user/o/owatts/temp/gpu_gen/66_015.dnn_lab_NORM_BIN'
-owave = '/afs/inf.ed.ac.uk/user/o/owatts/temp/cpu_gen/66_015_FROM_NORMLAB.wav'
+owave = '/afs/inf.ed.ac.uk/user/o/owatts/temp/cpu_gen/66_015_FROM_NORMLAB.txt'
 n = NNAcousticModel('/afs/inf.ed.ac.uk/user/o/owatts/temp/sw6_bib3_EMI', qfile)
 
 #data = numpy.ones((100,233)) * 1.0
@@ -947,7 +900,7 @@ p = n.generate_from_norm_binary_lab(lfile, 233, owave, vuv_thresh=0.5, fzero_sca
 '''
 qfile = '/Users/owatts/repos/ossian_working/Ossian/train/sw/speakers/bible3/naive_SW6/questions_dnn.hed.cont'
 lfile = '/afs/inf.ed.ac.uk/user/o/owatts/temp/gpu_gen/66_015.dnn_lab_BINONLY'
-owave = '/afs/inf.ed.ac.uk/user/o/owatts/temp/cpu_gen/null.wav'
+owave = '/afs/inf.ed.ac.uk/user/o/owatts/temp/cpu_gen/null.txt'
 n = NNAcousticModel('/afs/inf.ed.ac.uk/user/o/owatts/temp/sw6_bib3_EMI', qfile)
 
 #data = numpy.ones((100,233)) * 1.0
