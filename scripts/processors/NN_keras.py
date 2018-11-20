@@ -203,6 +203,8 @@ class NNAcousticModel(NN):
         output = self.predict(input)
         streams = self.split_into_streams(output)
 
+
+
         # TODO: decipher what is going on here, what is mlpged? Some sort of filtering?
         if mlpg:
             mlpged = {}
@@ -257,17 +259,17 @@ class NNAcousticModel(NN):
                 streams[stream] = data
 
         # TODO: this changes lf0, should vuv_thresh be 0? vuv donsn't get close to 0.5... maybe vuv output is flawed... it was never un-normalized...
-        # if 'lf0' in streams:
-        #     fzero = numpy.exp(streams['lf0'])
-        #
-        #     if 'vuv' in streams:
-        #         vuv = streams['vuv']
-        #         lf0 = streams['lf0']
-        #         fzero[vuv <= vuv_thresh] = 0.0
-        #
-        #     fzero *= fzero_scale
-        #
-        #     streams['lf0'] = fzero
+        if 'lf0' in streams:
+            fzero = numpy.exp(streams['lf0'])
+
+            if 'vuv' in streams:
+                vuv = streams['vuv']
+                lf0 = streams['lf0']
+                fzero[vuv <= vuv_thresh] = 0.0
+
+            fzero *= fzero_scale
+
+            streams['lf0'] = fzero
 
         # self.world_resynth(streams, outwave)
         return streams
@@ -278,7 +280,8 @@ class NNAcousticModel(NN):
 
         start = 0
         outputs = {}
-        for stream in self.outstreams:
+        # TODO: Sort self.outstreams to ensure correct stream order
+        for stream in sorted(self.outstreams):
             end = start + self.outdims[stream]
             print(stream)
             outputs[stream] = input[:, start:end]
@@ -593,7 +596,7 @@ class NNDurationPredictor(SUtteranceProcessor):
 
 class NNAcousticPredictor(SUtteranceProcessor):
     def __init__(self, processor_name='acoustic_predictor', input_label_filetype='dnn_lab',
-                 output_filetype='txt',
+                 output_filetype='wav',
                  question_file_name='questions_dnn.hed.cont',
                  variance_expansion=0.0,
                  fill_unvoiced_gaps=0,
@@ -779,11 +782,11 @@ class NNAcousticPredictor(SUtteranceProcessor):
                  output data type.
         '''
 
-        comm = "%s/synth %s %s /tmp/tmp_d.lf0 /tmp/tmp.spec /tmp/tmp_d.bap /tmp/tmp.resyn.txt" % (bin_dir, fftl, sr)
+        comm = "%s/synth %s %s /tmp/tmp_d.lf0 /tmp/tmp.spec /tmp/tmp_d.bap /tmp/tmp.resyn.wav" % (bin_dir, fftl, sr)
         print(comm)
         os.system(comm)
 
-        os.system("mv /tmp/tmp.resyn.txt " + outfile)
+        os.system("mv /tmp/tmp.resyn.wav " + outfile)
         print('Produced %s' % (outfile))
 
 
