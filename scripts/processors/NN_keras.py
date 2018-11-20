@@ -458,9 +458,9 @@ class NNDurationPredictor(SUtteranceProcessor):
             ## TODO: pack up qfile too
             self.model = NNDurationModel(self.model_dir, qfile)
             self.trained = True
-        except AssertionError as e:
+        except:
             print('Cannot load NN model from model_dir: %s -- not trained yet' % self.model_dir)
-            print('error: %s' % e)
+            # print('error: %s')
             self.trained = False
 
         ## TODO: neater handling of option of using .cont questions
@@ -629,8 +629,7 @@ class NNAcousticPredictor(SUtteranceProcessor):
             ## TODO: pack up qfile too
             self.model = NNAcousticModel(self.model_dir, qfile)
             self.trained = True
-        except AssertionError as e:
-            # sys.exit('Cannot load NN model from model_dir: %s'%self.model_dir)
+        except:
             print('Cannot load NN model from model_dir: %s -- not trained yet' % self.model_dir)
             self.trained = False
 
