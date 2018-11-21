@@ -13,6 +13,9 @@ __pycache__/
 #corpus
 corpus/
 
+#temp
+tmp/
+
 #installed tools
 tools/bin/
 tools/include/

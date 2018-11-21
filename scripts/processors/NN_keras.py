@@ -765,12 +765,12 @@ class NNAcousticPredictor(SUtteranceProcessor):
         fftl = self.fftl
 
         for (stream, data) in streams.items():
-            put_speech(data, '/tmp/tmp.%s' % (stream))
-            comm = bin_dir + "/x2x +fd /tmp/tmp." + stream + " >/tmp/tmp_d." + stream
+            put_speech(data, './tmp/tmp.%s' % (stream))
+            comm = bin_dir + "/x2x +fd ./tmp/tmp." + stream + " >./tmp/tmp_d." + stream
             print(comm)
             os.system(comm)
 
-        comm = "%s/mgc2sp -a %s -g 0 -m %s -l %s -o 2 /tmp/tmp.mgc | %s/sopr -d 32768.0 -P | %s/x2x +fd -o > /tmp/tmp.spec" % (
+        comm = "%s/mgc2sp -a %s -g 0 -m %s -l %s -o 2 ./tmp/tmp.mgc | %s/sopr -d 32768.0 -P | %s/x2x +fd -o > ./tmp/tmp.spec" % (
         bin_dir, alpha, order, fftl, bin_dir, bin_dir)
         print(comm)
         os.system(comm)
@@ -781,11 +781,11 @@ class NNAcousticPredictor(SUtteranceProcessor):
                  output data type.
         '''
 
-        comm = "%s/synth %s %s /tmp/tmp_d.lf0 /tmp/tmp.spec /tmp/tmp_d.bap /tmp/tmp.resyn.wav" % (bin_dir, fftl, sr)
+        comm = "%s/synth %s %s ./tmp/tmp_d.lf0 ./tmp/tmp.spec ./tmp/tmp_d.bap ./tmp/tmp.resyn.wav" % (bin_dir, fftl, sr)
         print(comm)
         os.system(comm)
 
-        os.system("mv /tmp/tmp.resyn.wav " + outfile)
+        os.system("mv ./tmp/tmp.resyn.wav " + outfile)
         print('Produced %s' % (outfile))
 
 
