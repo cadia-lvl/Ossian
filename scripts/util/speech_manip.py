@@ -45,11 +45,7 @@ def put_speech(data, outfile):
 def write_floats(data, outfile):
     m = len(data)             
     format = str(m)+"f"
-
     packed = struct.pack(format, *data)
-    #f = open(outfile, "w")
-    #f.write(packed)
-    #f.close()
     with open(outfile, 'wb') as f:
         f.write(packed)
 
