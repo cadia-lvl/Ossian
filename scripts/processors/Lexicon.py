@@ -67,7 +67,7 @@ class Lexicon(SUtteranceProcessor):
 
         super(Lexicon, self).__init__()
 
-        self.parallelisable = False ## poor parallelisation due to sequitur (## see: http://stackoverflow.com/questions/20727375/multiprocessing-pool-slower-than-just-using-ordinary-functions)
+        # self.parallelisable = False  ## poor parallelisation due to sequitur (## see: http://stackoverflow.com/questions/20727375/multiprocessing-pool-slower-than-just-using-ordinary-functions)
 
     def verify(self, voice_resources):
         self.voice_resources = voice_resources

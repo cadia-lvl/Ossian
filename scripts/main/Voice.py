@@ -10,6 +10,8 @@ import os
 import sys
 from shutil import ignore_patterns, copytree, rmtree
 import glob
+from math import ceil
+import time
 
 from naive.naive_util import *
 from .Utterance import *
@@ -22,12 +24,14 @@ import default.const as const
 from .Resources import *
 import default.const as c
 
-import multiprocessing
+from multiprocessing import Process
 
 global debug
 debug = False
 
 from configobj import ConfigObjError
+
+# TODO: clean up this entire class, there is a lot of commented code
 
 class Voice(object):
 
@@ -339,12 +343,11 @@ class Voice(object):
                                 ## see: http://stackoverflow.com/questions/20727375/multiprocessing-pool-slower-than-just-using-ordinary-functions
         ### ^---- TODO: this is now unsed
 
+        t = time.time()
 
         i = 1
         for processor in self.processors:
-            #print processor
-            #print dir(processor)
-            #print type(processor)
+
             print("\n\n== Train voice (proc no. %s (%s))  =="%(i, processor.processor_name))
 
             if not processor.trained:  
@@ -357,21 +360,48 @@ class Voice(object):
                     processor.train(speech_corpus, text_corpus)
                         
             print("          Applying processor " + processor.processor_name)
-            if self.max_cores > 1: pool = multiprocessing.Manager().Pool(self.max_cores)
-            for utterance_file in speech_corpus:                
-                if self.max_cores > 1 and processor.parallelisable:
-                        result = pool.apply_async(processor, args=(utterance_file, self.res.make_dir(c.TRAIN, "utt"), self.run_mode))                        
-                else:
+
+            if self.max_cores > 1 and processor.parallelisable:
+                # Split the utterances into n chunks
+                chunks = self.split_corpus(speech_corpus)
+                # Create processes, each supplied with one chunk of the corpus
+                processes = []
+                for i in range(len(chunks)):
+                    p = Process(target=chunk_processor, args=(processor, chunks[i], self.res.make_dir(c.TRAIN, "utt"), self.run_mode))
+                    p.Daemon = True
+                    p.start()
+                    processes.append(p)
+                # Join on every process (main thread can't continue until every process is terminated)
+                for pr in processes:
+                    pr.join()
+            else:
+                for utterance_file in speech_corpus:
                     utterance = Utterance(utterance_file, utterance_location=self.res.make_dir(c.TRAIN, "utt"))
                     processor.apply_to_utt(utterance, voice_mode=self.run_mode)
                     utterance.save()
-    #               utterance.pretty_print()
-            if self.max_cores > 1:
-                pool.close()
-                pool.join()
+
+    #         if self.max_cores > 1:
+    #             pool = multiprocessing.Manager().Pool(self.max_cores)
+    #         for utterance_file in speech_corpus:
+    #             if self.max_cores > 1 and processor.parallelisable:
+    #                 result = pool.apply_async(processor, args=(utterance_file, self.res.make_dir(c.TRAIN, "utt"), self.run_mode))
+    #             else:
+    #                 utterance = Utterance(utterance_file, utterance_location=self.res.make_dir(c.TRAIN, "utt"))
+    #                 processor.apply_to_utt(utterance, voice_mode=self.run_mode)
+    #                 utterance.save()
+    # #               utterance.pretty_print()
+    #         if self.max_cores > 1:
+    #             pool.close()
+    #             pool.join()
+
             i += 1
+
+        print('\nTIME : %s ' % (time.time() - t))
         self.save()
 
+    def split_corpus(self, speech_corpus):
+        n = ceil(len(speech_corpus) / self.max_cores)
+        return [speech_corpus[s:s+n] for s in range(0, len(speech_corpus), n)]
 
     def save(self):
         """
@@ -439,3 +469,11 @@ class Voice(object):
 #         ## Assume in current scope: 
 #         print globals()       
 #         return globals()[name] 
+
+
+def chunk_processor(processor, chunk, utterance_location, run_mode):
+
+    for utterance_file in chunk:
+        utterance = Utterance(utterance_file, utterance_location=utterance_location)
+        processor.apply_to_utt(utterance, voice_mode=run_mode)
+        utterance.save()
