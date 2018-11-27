@@ -44,7 +44,19 @@ class NN(object):
     def __init__(self, model_dir):
 
         # instantiate keras model with dummy values
-        self.keras_wrapper = kerasModels(n_in=1, hidden_layer_size=[1], n_out=1, hidden_layer_type=['tanh'])
+        model_params = {'inp_dim': 0,
+                        'hidden_layer_size': '0',
+                        'out_dim': 0,
+                        'hidden_layer_type': ' ',
+                        'output_layer_type': ' ',
+                        'dropout_rate': 0,
+                        'loss_function': 'mse',
+                        'optimizer': 'adam',
+                        'l1': 0,
+                        'l2': 0,
+                        'gpu_num': 0}
+
+        self.keras_wrapper = kerasModels(model_params)
         self.input_dim = None
         self.output_dim = None
         self.scaler_inp = None
@@ -58,17 +70,18 @@ class NN(object):
         # find the model files
         h5_file = glob(model_dir + '/*.h5')[0]
         json_file = glob(model_dir + '/*.json')[0]
+        params_file = glob(model_dir + '/*.pickle')[0]
         norm_stats_inp_file = glob(model_dir + '/input*.norm')[0]
         norm_stats_out_file = glob(model_dir + '/output*.norm')[0]
 
         # Load trained model from files
-        self.keras_wrapper.load_model(json_file, h5_file)
+        self.keras_wrapper.load_model(json_file, h5_file, params_file)
 
         # Get dimensions of the input and output
         with open(json_file, 'r') as f:
             model_dict = json.load(f)
-        self.input_dim = model_dict['config'][0]['config']['batch_input_shape'][1]
-        self.output_dim = model_dict['config'][-1]['config']['units']
+        self.input_dim = model_dict['config']['layers'][0]['config']['batch_input_shape'][1]
+        self.output_dim = model_dict['config']['layers'][-1]['config']['units']
 
         # Load the input and and output normalization objects
         # TODO: how do I deal with the normalization method? May need to pass this into the class
