@@ -24,7 +24,7 @@ import default.const as const
 from .Resources import *
 import default.const as c
 
-from multiprocessing import Process
+from multiprocessing import Process, cpu_count
 
 global debug
 debug = False
@@ -48,7 +48,7 @@ class Voice(object):
         if max_cores is not None and max_cores.isdigit():
             self.max_cores = int(max_cores)
         else:
-            self.max_cores = multiprocessing.cpu_count()
+            self.max_cores = cpu_count()
 
 
         # ANT: moved most things to Resources object
