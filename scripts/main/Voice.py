@@ -380,20 +380,6 @@ class Voice(object):
                     processor.apply_to_utt(utterance, voice_mode=self.run_mode)
                     utterance.save()
 
-    #         if self.max_cores > 1:
-    #             pool = multiprocessing.Manager().Pool(self.max_cores)
-    #         for utterance_file in speech_corpus:
-    #             if self.max_cores > 1 and processor.parallelisable:
-    #                 result = pool.apply_async(processor, args=(utterance_file, self.res.make_dir(c.TRAIN, "utt"), self.run_mode))
-    #             else:
-    #                 utterance = Utterance(utterance_file, utterance_location=self.res.make_dir(c.TRAIN, "utt"))
-    #                 processor.apply_to_utt(utterance, voice_mode=self.run_mode)
-    #                 utterance.save()
-    # #               utterance.pretty_print()
-    #         if self.max_cores > 1:
-    #             pool.close()
-    #             pool.join()
-
             i += 1
 
         print('\nTIME : %s ' % (time.time() - t))
@@ -405,9 +391,9 @@ class Voice(object):
 
     def save(self):
         """
-        Copy the minimal files necessary for synthesis with the built voice to the 
+        Copy the minimal files necessary for synthesis with the built voice to the
         ``$OSSIAN/voices/`` directory, including a copy of the voice config file.
-        This means the config can be tweaked after training 
+        This means the config can be tweaked after training
         without altering the recipe for voices built in the future.
         Also the recipe config can be modified for building future voices without breaking
         already-trained ones.
