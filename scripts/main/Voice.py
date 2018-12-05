@@ -24,7 +24,7 @@ import default.const as const
 from .Resources import *
 import default.const as c
 
-from multiprocessing import Process, cpu_count
+from multiprocessing import Process, cpu_count, Manager
 
 global debug
 debug = False
@@ -379,6 +379,19 @@ class Voice(object):
                     utterance = Utterance(utterance_file, utterance_location=self.res.make_dir(c.TRAIN, "utt"))
                     processor.apply_to_utt(utterance, voice_mode=self.run_mode)
                     utterance.save()
+
+            # if self.max_cores > 1:
+            #     pool = Manager().Pool(self.max_cores)
+            # for utterance_file in speech_corpus:
+            #     if self.max_cores > 1 and processor.parallelisable:
+            #         result = pool.apply_async(processor, args=(utterance_file, self.res.make_dir(c.TRAIN, "utt"), self.run_mode))
+            #     else:
+            #         utterance = Utterance(utterance_file, utterance_location=self.res.make_dir(c.TRAIN, "utt"))
+            #         processor.apply_to_utt(utterance, voice_mode=self.run_mode)
+            #         utterance.save()
+            # if self.max_cores > 1:
+            #     pool.close()
+            #     pool.join()
 
             i += 1
 
