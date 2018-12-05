@@ -276,8 +276,12 @@ class Utterance(object):
         assert  utt_dir_name == "utt"
 
         dirname = os.path.join(corpus_dir, file_type)
-        if not os.path.isdir(dirname):
+        # if not os.path.isdir(dirname):
+        #     os.mkdir(dirname)
+        try:
             os.mkdir(dirname)
+        except FileExistsError:
+            pass
 
         return dirname
 
