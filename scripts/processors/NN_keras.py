@@ -18,13 +18,13 @@ import inspect
 current_dir = os.path.realpath(os.path.abspath(os.path.dirname(inspect.getfile(inspect.currentframe()))))
 sys.path.append(current_dir + '/../../tools/merlin/src/')
 
-
+from io_funcs.binary_io import BinaryIOCollection
 from processors.UtteranceProcessor import SUtteranceProcessor
 from util.NodeProcessors import *
 from util.speech_manip import get_speech, put_speech
 import util.Wavelets as cwt
 import util.cwt_utils
-from naive.naive_util import readlist
+from naive.naive_util import readlist, writelist
 from processors.FeatureExtractor import get_world_fft_and_apdim
 from keras_lib.model import kerasModels
 from keras_lib.data_utils import load_norm_stats
@@ -271,7 +271,6 @@ class NNAcousticModel(NN):
                 data[silent_frames == 1.0, :] = 0.0
                 streams[stream] = data
 
-        # TODO: this changes lf0, should vuv_thresh be 0? vuv donsn't get close to 0.5... maybe vuv output is flawed... it was never un-normalized...
         if 'lf0' in streams:
             fzero = numpy.exp(streams['lf0'])
 
@@ -757,6 +756,19 @@ class NNAcousticPredictor(SUtteranceProcessor):
 
         streams = self.model.generate(label, variance_expansion=self.variance_expansion, \
                                       fill_unvoiced_gaps=self.fill_unvoiced_gaps)
+
+        # TODO: save streams to binary files
+        # Streams are a dictionary: {bap, lf0, mgc, vuv}
+        # I can specify path via self.voice_resources['voice'] ('/home/alexander/Documents/text_to_speech/projects/Ossian_py3/voices//ice/ivona/lvl_lex_01_nn')
+        directory = os.path.join(self.voice_resources.path['voice'], 'output', 'cmp')
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        io = BinaryIOCollection()
+        for name, data in streams.items():
+            file = os.path.join(directory, utt.data.attrib['utterance_name']+'.'+name)
+            io.array_to_binary_file(data, file)
+            # writelist(utt_data=data, label_file=file, uni=False)
 
         self.world_resynth(streams, owave)
 

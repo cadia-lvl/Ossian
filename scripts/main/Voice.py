@@ -238,7 +238,9 @@ class Voice(object):
     
         output_location = self.res.make_dir(c.VOICE, "output")
         test_utterance_location = self.res.make_dir(c.VOICE, "output/utt")
-        test_utterance_name = "temp" 
+
+        # TODO: use name of the text file
+        test_utterance_name = output_wavefile.split('/')[-1].split('.')[0]
         
         utt = Utterance(input_string, utterance_location=test_utterance_location)        
         utt.set("utterance_name", test_utterance_name)
