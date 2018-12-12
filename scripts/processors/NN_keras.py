@@ -106,11 +106,15 @@ class NN(object):
         # Execute prediction
         out = self.keras_wrapper.model.predict(inp, verbose=1)
 
+        # Is output in the correct shape?
+        if len(out.shape) == 3:
+            out = out.reshape((-1, self.output_dim))
+
         # de-normalize
         out = self.scaler_out.inverse_transform(out)
 
         # Check that output matrix is of correct shape
-        output_dim = out.shape[1]
+        output_dim = out.shape[-1]
         assert output_dim == self.output_dim, (output_dim, self.output_dim)
 
         return out
