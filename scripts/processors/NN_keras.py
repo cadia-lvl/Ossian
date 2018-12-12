@@ -57,6 +57,7 @@ class NN(object):
                         'gpu_num': 0}
 
         self.keras_wrapper = kerasModels(model_params)
+        self.input_shape = None
         self.input_dim = None
         self.output_dim = None
         self.scaler_inp = None
@@ -80,7 +81,8 @@ class NN(object):
         # Get dimensions of the input and output
         with open(json_file, 'r') as f:
             model_dict = json.load(f)
-        self.input_dim = model_dict['config']['layers'][0]['config']['batch_input_shape'][1]
+        self.input_shape = model_dict['config']['layers'][0]['config']['batch_input_shape']
+        self.input_dim = model_dict['config']['layers'][0]['config']['batch_input_shape'][-1]
         self.output_dim = model_dict['config']['layers'][-1]['config']['units']
 
         # Load the input and and output normalization objects
@@ -90,12 +92,16 @@ class NN(object):
 
     def predict(self, inp):
 
-        # Check that input matrix is of correct shape
-        input_dim = inp.shape[1]
+        # Check that input matrix is of correct dimensionality
+        input_dim = inp.shape[-1]
         assert input_dim == self.input_dim, (input_dim, self.input_dim)
 
         # normalize
         inp = self.scaler_inp.transform(inp)
+
+        # Is input in the correct shape?
+        if len(self.input_shape) == 3:
+            inp = inp.reshape((1, -1, self.input_dim))
 
         # Execute prediction
         out = self.keras_wrapper.model.predict(inp, verbose=1)
@@ -249,8 +255,6 @@ class NNAcousticModel(NN):
             streams = new_streams
 
         # impose 0 ceiling on baps, else we get artifacts:-
-        # (I think this was the problem I was trying to fix by not scaling f0 and energy previously)
-        # TODO: why do we do this?? This erases a ton of information from the bap stream!
         streams['bap'] = np.minimum(streams['bap'], np.zeros(np.shape(streams['bap'])))
 
         #         if fill_unvoiced_gaps > 0:
