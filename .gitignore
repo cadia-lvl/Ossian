@@ -30,6 +30,7 @@ train/
 #trained/tested models
 train/
 test/
+LVL_demo/
 >>>>>>> master
 voices/
 

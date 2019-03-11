@@ -226,8 +226,6 @@ class NNAcousticModel(NN):
         output = self.predict(input)
         streams = self.split_into_streams(output)
 
-
-
         # TODO: decipher what is going on here, what is mlpged? Some sort of filtering?
         if mlpg:
             mlpged = {}
@@ -403,18 +401,21 @@ class NNAcousticModel(NN):
 
     def simple_scale_variance(self, speech, stream, gv_weight=1.0):
 
-        stream_std = self.stream_std[stream][0, :]
-        static_std = stream_std[:self.indims[stream]]
+        # self.stream_std gets its data from the scaler object (std of entire dataset)
+        # stream_std = self.stream_std[stream][0, :]
+        # static_std = stream_std[:self.indims[stream]]
 
-        assert gv_weight <= 1.0 and gv_weight >= 0.0
-        local_weight = 1.0 - gv_weight
+        # assert gv_weight <= 1.0 and gv_weight >= 0.0
+        # local_weight = 1.0 - gv_weight
 
+        # # The mean and std of the output
         utt_mean = numpy.mean(speech, axis=0)
-        utt_std = numpy.std(speech, axis=0)
+        # utt_std = numpy.std(speech, axis=0)
 
-        global_std = numpy.transpose(static_std)
-        weighted_global_std = (gv_weight * global_std) + (local_weight * utt_std)
-        std_ratio = weighted_global_std / utt_std
+        # global_std = numpy.transpose(static_std)
+        # weighted_global_std = (gv_weight * global_std) + (local_weight * utt_std)
+        # std_ratio = weighted_global_std / utt_std
+        std_ratio = gv_weight
 
         nframes, ndim = numpy.shape(speech)
         utt_mean_matrix = numpy.tile(utt_mean, (nframes, 1))
