@@ -529,7 +529,7 @@ class NNDurationPredictor(SUtteranceProcessor):
         ## files between train and validation. Using about 5% or 10% of the data for validation is
         ## pretty standard.
         n_test = 1
-        n_valid = int(float(n_utts) * 0.05)  ## take 5%
+        n_valid = int(float(n_utts) * 0.2)  ## take 20%
         extra = 3  ## hack - so that if merlin's data preparation fails for a couple of utterances, training won't break
         n_train = n_utts - (n_valid + n_test + extra)
         for quantity in [n_train, n_test, n_valid]:
@@ -694,7 +694,7 @@ class NNAcousticPredictor(SUtteranceProcessor):
         ## files between train and validation. Using about 5% or 10% of the data for validation is
         ## pretty standard.
         n_test = 1
-        n_valid = int(float(n_utts) * 0.05)  ## take 5%
+        n_valid = int(float(n_utts) * 0.20)  ## take 20%
         extra = 3  ## hack - so that if merlin's data preparation fails for a couple of utterances, training won't break
         n_train = n_utts - (n_valid + n_test + extra)
         for quantity in [n_train, n_test, n_valid]:
