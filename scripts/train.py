@@ -8,6 +8,7 @@ from __future__ import print_function
 import sys
 import re
 import os
+import random
 
 import default.fnames as fname
 import default.const as const
@@ -66,6 +67,8 @@ def main_work():
                     help= "directories in arbitrary location containing training data")
     a.add_argument('-file_num', dest='file_num', required=False, \
                  help="specify number of files to be used in training")
+    a.add_argument('-shuffle', dest='shuffle', required=False, \
+                   help="shuffle files randomly before selection")
     
     a.add_argument('-p', dest='max_cores', required=False, help="maximum number of CPU cores to use in parallel")
     a.add_argument('-bin', dest='custom_bindir') 
@@ -114,9 +117,15 @@ def train(opts, dirs):
 
     # Get names of individual txt and wav files:
     voice_data = []
+
     for c in corpora:
         count = 0
-        for f in sorted(os.listdir(c)):
+        file_list = sorted(os.listdir(c))
+        if opts.shuffle:
+            random.seed(1)
+            random.shuffle(file_list)
+
+        for f in file_list:
             if '._' not in f:
                 voice_data.append(os.path.join(c, f))
                 count += 1
