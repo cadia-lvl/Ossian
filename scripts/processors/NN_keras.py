@@ -49,6 +49,8 @@ class NN(object):
                         'out_dim': 0,
                         'hidden_layer_type': ' ',
                         'output_layer_type': ' ',
+                        'shared_layer_flag': [],
+                        'speaker_id': ' ',
                         'dropout_rate': 0,
                         'loss_function': 'mse',
                         'optimizer': 'adam',
