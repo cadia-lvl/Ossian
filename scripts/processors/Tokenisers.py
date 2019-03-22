@@ -5,7 +5,9 @@
 ## Contact: Antti Suni - Antti.Suni@helsinki.fi
 
 #from naive.naive_util import *
+
 from __future__ import print_function
+import sys
 import unicodedata
 import glob
 import subprocess
@@ -297,7 +299,7 @@ class NormalizingTokeniser(SUtteranceProcessor):
         return normalised_string.strip(' \n').decode('utf-8')
 
     def do_training(self, speech_corpus, text_corpus):
-        print "NormalizingTokeniser requires no training"
+        print("NormalizingTokeniser requires no training")
 
 
     # class SafeTextMaker(NodeEnricher):
