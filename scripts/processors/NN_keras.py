@@ -754,9 +754,9 @@ class NNAcousticPredictor(SUtteranceProcessor):
         print('------------')
 
     def process_utterance(self, utt):
-        if utt.has_attribute("waveform"):
+        # if utt.has_attribute("waveform"):
             # print "Utt has a natural waveform -- don't synthesise"
-            return
+            # return
 
         # if not self.trained:
         #             print 'WARNING: Cannot apply processor %s till model is trained'%(self.processor_name)

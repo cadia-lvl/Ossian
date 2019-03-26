@@ -102,38 +102,49 @@ def main_work():
     para = []
     # Go through the files a paragraph at a time, unless it's SSML in which case we parse it
     # An empty line marks the change of paragraphs in plain text files
-    for line in fileinput.input(opts.files):
-       line = line.rstrip()
-       t = start_clock('Synthesise sentence')
-       print(line)
-       if fileinput.isfirstline():
-           if para != []:
-               voice.synth_utterance(''.join(para), output_wavefile=output_wavefile, \
-                            output_labfile=output_labfile)
-               if opts.play:
-                   os.system('play ' + output_wavefile)
-               para = []
-           line = line.lstrip()
-           if line.startswith('<speak') or line.startswith('<xml'):
-               tree = etree.parse(fileinput.filename())
-               parseSSML(tree, voice)
-               fileinput.nextfile()
-           else: para.append(line)
-       elif line.isspace(): prevspace = True
-       elif prevspace and para != []:
-           voice.synth_utterance(''.join(para), output_wavefile=output_wavefile, \
-                            output_labfile=output_labfile)
-           prevspace = False
-           para = [line]
-       else:
-           para.append(line)
+    t = start_clock('Synthesise sentence')
+    if opts.files[0].split('.')[-1] == 'utt':
+        if type(opts.files) == list:
+            for file in opts.files:
+                voice.synth_utterance_acoustic_only(file, output_wavefile=output_wavefile, output_labfile=output_labfile)
+        elif type(opts.files) == str:
+            voice.synth_utterance_acoustic_only(opts.files, output_wavefile=output_wavefile, output_labfile=output_labfile)
+        else:
+            raise ValueError
+    else:
+        for line in fileinput.input(opts.files):
+           line = line.rstrip()
 
-    # Run synthesis on the utterance
-    if para != []:
-       voice.synth_utterance(''.join(para), output_wavefile=output_wavefile, \
-                            output_labfile=output_labfile)
-       if opts.play:
-           os.system('play ' + output_wavefile)
+           print(line)
+           if fileinput.isfirstline():
+               if para != []:
+                   voice.synth_utterance(''.join(para), output_wavefile=output_wavefile, \
+                                output_labfile=output_labfile)
+                   if opts.play:
+                       os.system('play ' + output_wavefile)
+                   para = []
+               line = line.lstrip()
+               if line.startswith('<speak') or line.startswith('<xml'):
+                   tree = etree.parse(fileinput.filename())
+                   parseSSML(tree, voice)
+                   fileinput.nextfile()
+               else: para.append(line)
+           elif line.isspace(): prevspace = True
+           elif prevspace and para != []:
+               voice.synth_utterance(''.join(para), output_wavefile=output_wavefile, \
+                                output_labfile=output_labfile)
+               prevspace = False
+               para = [line]
+           else:
+               para.append(line)
+
+        # Run synthesis on the utterance
+        if para != []:
+           voice.synth_utterance(''.join(para), output_wavefile=output_wavefile, \
+                                output_labfile=output_labfile)
+           if opts.play:
+               os.system('play ' + output_wavefile)
+
     stop_clock(t)
 
 def parseSSML(tree, voice):

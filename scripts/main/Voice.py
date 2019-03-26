@@ -80,9 +80,9 @@ class Voice(object):
             self.trained = self.res.voice_trained = False
         
         
-        if self.run_mode == 'runtime':
-            if not self.trained:
-                sys.exit('No voice of specified configuration exists to synthesise from')
+        # if self.run_mode == 'runtime':
+        #     if not self.trained:
+        #         sys.exit('No voice of specified configuration exists to synthesise from')
             
         if self.trained:
             load_from_file = self.voice_config_file
@@ -234,6 +234,55 @@ class Voice(object):
     def archive_utterances(self):
         self.make_archive = True
 
+    def synth_utterance_acoustic_only(self, utt_path, output_wavefile=None, output_labfile=None, basename=None, input_wavefile=None, output_uttfile=None, output_extensions=[]):
+
+        output_location = self.res.make_dir(c.VOICE, "output")
+        test_utterance_location = self.res.make_dir(c.VOICE, "output/utt")
+
+        # TODO: use name of the text file
+        test_utterance_name = output_wavefile.split('/')[-1].split('.')[0]
+
+        # Instantiate utterance from utt file
+        utt = Utterance(utt_path, utterance_location=test_utterance_location)
+        utt.set("utterance_name", test_utterance_name)
+
+        # Apply acoustic predictor
+        print("\n==  acoustic predictor  ==")
+        self.processors[-1].apply_to_utt(utt, voice_mode=self.run_mode)
+
+        if output_wavefile:
+            if not utt.has_external_data("wav"):
+                print("Warning: no wave produced for this utt")
+            else:
+                temp_wave = utt.get_filename("wav")
+
+                ## Check files are different; realpath so that e.g. / and // are equivalent:
+                if os.path.realpath(temp_wave) != os.path.realpath(output_wavefile):
+                    shutil.copyfile(temp_wave, output_wavefile)
+
+        if output_labfile:
+            if not utt.has_external_data("lab"):
+                print("Warning: no lab produced for this utt")
+            else:
+                temp_lab = utt.get_filename("lab")
+                shutil.copyfile(temp_lab, output_labfile)
+
+        if output_extensions != []:
+            for ext in output_extensions:
+                if not utt.has_external_data(ext):
+                    print("Warning: no %s produced for this utt" % (ext))
+                else:
+                    assert output_wavefile
+                    output_file = re.sub('wav\Z', ext, output_wavefile)
+                    temp_file = utt.get_filename(ext)
+                    shutil.copyfile(temp_file, output_file)
+
+        utt.save()
+
+        if output_uttfile:
+            utterance_path = os.path.join(test_utterance_location, test_utterance_name + '.utt')
+            shutil.copyfile(utterance_path, output_uttfile)
+
     def synth_utterance(self, input_string, output_wavefile=None, output_labfile=None, basename=None, input_wavefile=None, output_uttfile=None, output_extensions=[]):
     
         output_location = self.res.make_dir(c.VOICE, "output")
@@ -300,9 +349,9 @@ class Voice(object):
                 else:
                     assert output_wavefile
                     output_file = re.sub('wav\Z', ext, output_wavefile)
-                    temp_file = utt.get_filename(ext)            
-                    shutil.copyfile(temp_file, output_file) 
-            
+                    temp_file = utt.get_filename(ext)
+                    shutil.copyfile(temp_file, output_file)
+
 
         utt.save()
 
