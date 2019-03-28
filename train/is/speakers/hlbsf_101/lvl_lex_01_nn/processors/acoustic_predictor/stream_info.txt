@@ -1,0 +1,4 @@
+bap lf0 mgc
+5 1 60
+bap lf0 mgc vuv
+15 3 180 1

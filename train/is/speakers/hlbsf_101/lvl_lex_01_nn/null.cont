@@ -1,0 +1,20 @@
+CQS state_1_nframes {*/0:(\d+)/*}
+
+
+
+CQS state_2_nframes {*/1:(\d+)/*}
+
+
+
+CQS state_3_nframes {*/2:(\d+)/*}
+
+
+
+CQS state_4_nframes {*/3:(\d+)/*}
+
+
+
+CQS state_5_nframes {*/4:(\d+)/*}
+
+
+

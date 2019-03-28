@@ -1,0 +1,33 @@
+QS segment_is_C {*/0:C/*}
+QS segment_is_J {*/0:J/*}
+QS segment_is_J_0 {*/0:J_0/*}
+QS segment_is_N {*/0:N/*}
+QS segment_is_N_0 {*/0:N_0/*}
+QS segment_is_Oi {*/0:Oi/*}
+QS segment_is_P: {*/0:P:/*}
+QS segment_is_PY {*/0:PY/*}
+QS segment_is_PY: {*/0:PY:/*}
+QS segment_is_Y: {*/0:Y:/*}
+QS segment_is_Yi {*/0:Yi/*}
+QS segment_is_ai {*/0:ai/*}
+QS segment_is_ai: {*/0:ai:/*}
+QS segment_is_au {*/0:au/*}
+QS segment_is_axr {*/0:axr/*}
+QS segment_is_c_h {*/0:c_h/*}
+QS segment_is_ei {*/0:ei/*}
+QS segment_is_ei: {*/0:ei:/*}
+QS segment_is_k_h {*/0:k_h/*}
+QS segment_is_l_0 {*/0:l_0/*}
+QS segment_is_m_0 {*/0:m_0/*}
+QS segment_is_n_0 {*/0:n_0/*}
+QS segment_is_ou {*/0:ou/*}
+QS segment_is_ou: {*/0:ou:/*}
+QS segment_is_p_h {*/0:p_h/*}
+QS segment_is_r_0 {*/0:r_0/*}
+QS segment_is_t_h {*/0:t_h/*}
+QS segment_is_u {*/0:u/*}
+QS segment_is_u: {*/0:u:/*}
+QS segment_is_x {*/0:x/*}
+
+
+

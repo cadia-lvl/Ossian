@@ -1,0 +1,5 @@
+0	state_1_nframes	NUMERIC	MAX:184
+1	state_2_nframes	NUMERIC	MAX:678
+2	state_3_nframes	NUMERIC	MAX:589
+3	state_4_nframes	NUMERIC	MAX:321
+4	state_5_nframes	NUMERIC	MAX:151
