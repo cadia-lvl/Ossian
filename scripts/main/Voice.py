@@ -10,6 +10,8 @@ import os
 import sys
 from shutil import ignore_patterns, copytree, rmtree
 import glob
+from math import ceil
+import time
 
 from naive.naive_util import *
 from .Utterance import *
@@ -22,12 +24,14 @@ import default.const as const
 from .Resources import *
 import default.const as c
 
-import multiprocessing
+from multiprocessing import Process, cpu_count, Manager
 
 global debug
 debug = False
 
 from configobj import ConfigObjError
+
+# TODO: clean up this entire class, there is a lot of commented code
 
 class Voice(object):
 
@@ -44,7 +48,7 @@ class Voice(object):
         if max_cores is not None and max_cores.isdigit():
             self.max_cores = int(max_cores)
         else:
-            self.max_cores = multiprocessing.cpu_count()
+            self.max_cores = cpu_count()
 
 
         # ANT: moved most things to Resources object
@@ -76,9 +80,9 @@ class Voice(object):
             self.trained = self.res.voice_trained = False
         
         
-        if self.run_mode == 'runtime':
-            if not self.trained:
-                sys.exit('No voice of specified configuration exists to synthesise from')
+        # if self.run_mode == 'runtime':
+        #     if not self.trained:
+        #         sys.exit('No voice of specified configuration exists to synthesise from')
             
         if self.trained:
             load_from_file = self.voice_config_file
@@ -230,11 +234,62 @@ class Voice(object):
     def archive_utterances(self):
         self.make_archive = True
 
+    def synth_utterance_acoustic_only(self, utt_path, output_wavefile=None, output_labfile=None, basename=None, input_wavefile=None, output_uttfile=None, output_extensions=[]):
+
+        output_location = self.res.make_dir(c.VOICE, "output")
+        test_utterance_location = self.res.make_dir(c.VOICE, "output/utt")
+
+        # TODO: use name of the text file
+        test_utterance_name = output_wavefile.split('/')[-1].split('.')[0]
+
+        # Instantiate utterance from utt file
+        utt = Utterance(utt_path, utterance_location=test_utterance_location)
+        utt.set("utterance_name", test_utterance_name)
+
+        # Apply acoustic predictor
+        print("\n==  acoustic predictor  ==")
+        self.processors[-1].apply_to_utt(utt, voice_mode=self.run_mode)
+
+        if output_wavefile:
+            if not utt.has_external_data("wav"):
+                print("Warning: no wave produced for this utt")
+            else:
+                temp_wave = utt.get_filename("wav")
+
+                ## Check files are different; realpath so that e.g. / and // are equivalent:
+                if os.path.realpath(temp_wave) != os.path.realpath(output_wavefile):
+                    shutil.copyfile(temp_wave, output_wavefile)
+
+        if output_labfile:
+            if not utt.has_external_data("lab"):
+                print("Warning: no lab produced for this utt")
+            else:
+                temp_lab = utt.get_filename("lab")
+                shutil.copyfile(temp_lab, output_labfile)
+
+        if output_extensions != []:
+            for ext in output_extensions:
+                if not utt.has_external_data(ext):
+                    print("Warning: no %s produced for this utt" % (ext))
+                else:
+                    assert output_wavefile
+                    output_file = re.sub('wav\Z', ext, output_wavefile)
+                    temp_file = utt.get_filename(ext)
+                    shutil.copyfile(temp_file, output_file)
+
+        utt.save()
+
+        if output_uttfile:
+            utterance_path = os.path.join(test_utterance_location, test_utterance_name + '.utt')
+            shutil.copyfile(utterance_path, output_uttfile)
+
     def synth_utterance(self, input_string, output_wavefile=None, output_labfile=None, basename=None, input_wavefile=None, output_uttfile=None, output_extensions=[]):
     
         output_location = self.res.make_dir(c.VOICE, "output")
         test_utterance_location = self.res.make_dir(c.VOICE, "output/utt")
-        test_utterance_name = "temp" 
+
+        # TODO: use name of the text file
+        test_utterance_name = output_wavefile.split('/')[-1].split('.')[0]
         
         utt = Utterance(input_string, utterance_location=test_utterance_location)        
         utt.set("utterance_name", test_utterance_name)
@@ -294,9 +349,9 @@ class Voice(object):
                 else:
                     assert output_wavefile
                     output_file = re.sub('wav\Z', ext, output_wavefile)
-                    temp_file = utt.get_filename(ext)            
-                    shutil.copyfile(temp_file, output_file) 
-            
+                    temp_file = utt.get_filename(ext)
+                    shutil.copyfile(temp_file, output_file)
+
 
         utt.save()
 
@@ -339,12 +394,11 @@ class Voice(object):
                                 ## see: http://stackoverflow.com/questions/20727375/multiprocessing-pool-slower-than-just-using-ordinary-functions
         ### ^---- TODO: this is now unsed
 
+        t = time.time()
 
         i = 1
         for processor in self.processors:
-            #print processor
-            #print dir(processor)
-            #print type(processor)
+
             print("\n\n== Train voice (proc no. %s (%s))  =="%(i, processor.processor_name))
 
             if not processor.trained:  
@@ -357,27 +411,53 @@ class Voice(object):
                     processor.train(speech_corpus, text_corpus)
                         
             print("          Applying processor " + processor.processor_name)
-            if self.max_cores > 1: pool = multiprocessing.Manager().Pool(self.max_cores)
-            for utterance_file in speech_corpus:                
-                if self.max_cores > 1 and processor.parallelisable:
-                        result = pool.apply_async(processor, args=(utterance_file, self.res.make_dir(c.TRAIN, "utt"), self.run_mode))                        
-                else:
+
+            if self.max_cores > 1 and processor.parallelisable:
+                # Split the utterances into n chunks
+                chunks = self.split_corpus(speech_corpus)
+                # Create processes, each supplied with one chunk of the corpus
+                processes = []
+                for i in range(len(chunks)):
+                    p = Process(target=chunk_processor, args=(processor, chunks[i], self.res.make_dir(c.TRAIN, "utt"), self.run_mode))
+                    p.Daemon = True
+                    p.start()
+                    processes.append(p)
+                # Join on every process (main thread can't continue until every process is terminated)
+                for pr in processes:
+                    pr.join()
+            else:
+                for utterance_file in speech_corpus:
                     utterance = Utterance(utterance_file, utterance_location=self.res.make_dir(c.TRAIN, "utt"))
                     processor.apply_to_utt(utterance, voice_mode=self.run_mode)
                     utterance.save()
-    #               utterance.pretty_print()
-            if self.max_cores > 1:
-                pool.close()
-                pool.join()
+
+            # if self.max_cores > 1:
+            #     pool = Manager().Pool(self.max_cores)
+            # for utterance_file in speech_corpus:
+            #     if self.max_cores > 1 and processor.parallelisable:
+            #         result = pool.apply_async(processor, args=(utterance_file, self.res.make_dir(c.TRAIN, "utt"), self.run_mode))
+            #     else:
+            #         utterance = Utterance(utterance_file, utterance_location=self.res.make_dir(c.TRAIN, "utt"))
+            #         processor.apply_to_utt(utterance, voice_mode=self.run_mode)
+            #         utterance.save()
+            # if self.max_cores > 1:
+            #     pool.close()
+            #     pool.join()
+
             i += 1
+
+        print('\nTIME : %s ' % (time.time() - t))
         self.save()
 
+    def split_corpus(self, speech_corpus):
+        n = ceil(len(speech_corpus) / self.max_cores)
+        return [speech_corpus[s:s+n] for s in range(0, len(speech_corpus), n)]
 
     def save(self):
         """
-        Copy the minimal files necessary for synthesis with the built voice to the 
+        Copy the minimal files necessary for synthesis with the built voice to the
         ``$OSSIAN/voices/`` directory, including a copy of the voice config file.
-        This means the config can be tweaked after training 
+        This means the config can be tweaked after training
         without altering the recipe for voices built in the future.
         Also the recipe config can be modified for building future voices without breaking
         already-trained ones.
@@ -439,3 +519,11 @@ class Voice(object):
 #         ## Assume in current scope: 
 #         print globals()       
 #         return globals()[name] 
+
+
+def chunk_processor(processor, chunk, utterance_location, run_mode):
+
+    for utterance_file in chunk:
+        utterance = Utterance(utterance_file, utterance_location=utterance_location)
+        processor.apply_to_utt(utterance, voice_mode=run_mode)
+        utterance.save()

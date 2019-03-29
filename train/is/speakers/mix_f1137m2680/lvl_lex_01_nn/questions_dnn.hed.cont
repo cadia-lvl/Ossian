@@ -1,0 +1,487 @@
+QS ll_segment_is_C {*/0:C/*}
+QS ll_segment_is_D {*/0:D/*}
+QS ll_segment_is_E {*/0:E/*}
+QS ll_segment_is_E: {*/0:E:/*}
+QS ll_segment_is_G {*/0:G/*}
+QS ll_segment_is_I {*/0:I/*}
+QS ll_segment_is_I: {*/0:I:/*}
+QS ll_segment_is_J {*/0:J/*}
+QS ll_segment_is_J_0 {*/0:J_0/*}
+QS ll_segment_is_N {*/0:N/*}
+QS ll_segment_is_N_0 {*/0:N_0/*}
+QS ll_segment_is_O {*/0:O/*}
+QS ll_segment_is_O: {*/0:O:/*}
+QS ll_segment_is_Oi {*/0:Oi/*}
+QS ll_segment_is_P {*/0:P/*}
+QS ll_segment_is_P: {*/0:P:/*}
+QS ll_segment_is_PY {*/0:PY/*}
+QS ll_segment_is_PY: {*/0:PY:/*}
+QS ll_segment_is_T {*/0:T/*}
+QS ll_segment_is_Y {*/0:Y/*}
+QS ll_segment_is_Y: {*/0:Y:/*}
+QS ll_segment_is_Yi {*/0:Yi/*}
+QS ll_segment_is_a {*/0:a/*}
+QS ll_segment_is_a: {*/0:a:/*}
+QS ll_segment_is_ai {*/0:ai/*}
+QS ll_segment_is_ai: {*/0:ai:/*}
+QS ll_segment_is_au {*/0:au/*}
+QS ll_segment_is_au: {*/0:au:/*}
+QS ll_segment_is_axr {*/0:axr/*}
+QS ll_segment_is_c {*/0:c/*}
+QS ll_segment_is_c_h {*/0:c_h/*}
+QS ll_segment_is_ei {*/0:ei/*}
+QS ll_segment_is_ei: {*/0:ei:/*}
+QS ll_segment_is_f {*/0:f/*}
+QS ll_segment_is_h {*/0:h/*}
+QS ll_segment_is_i {*/0:i/*}
+QS ll_segment_is_i: {*/0:i:/*}
+QS ll_segment_is_j {*/0:j/*}
+QS ll_segment_is_k {*/0:k/*}
+QS ll_segment_is_k_h {*/0:k_h/*}
+QS ll_segment_is_l {*/0:l/*}
+QS ll_segment_is_l_0 {*/0:l_0/*}
+QS ll_segment_is_m {*/0:m/*}
+QS ll_segment_is_m_0 {*/0:m_0/*}
+QS ll_segment_is_n {*/0:n/*}
+QS ll_segment_is_n_0 {*/0:n_0/*}
+QS ll_segment_is_ou {*/0:ou/*}
+QS ll_segment_is_ou: {*/0:ou:/*}
+QS ll_segment_is_p {*/0:p/*}
+QS ll_segment_is_p_h {*/0:p_h/*}
+QS ll_segment_is_r {*/0:r/*}
+QS ll_segment_is_r_0 {*/0:r_0/*}
+QS ll_segment_is_s {*/0:s/*}
+QS ll_segment_is_sil {*/0:sil/*}
+QS ll_segment_is_t {*/0:t/*}
+QS ll_segment_is_t_h {*/0:t_h/*}
+QS ll_segment_is_u {*/0:u/*}
+QS ll_segment_is_u: {*/0:u:/*}
+QS ll_segment_is_v {*/0:v/*}
+QS ll_segment_is_x {*/0:x/*}
+QS ll_segment_is__NA_ {*/0:_NA_/*}
+
+
+
+QS l_segment_is_C {*/1:C/*}
+QS l_segment_is_D {*/1:D/*}
+QS l_segment_is_E {*/1:E/*}
+QS l_segment_is_E: {*/1:E:/*}
+QS l_segment_is_G {*/1:G/*}
+QS l_segment_is_I {*/1:I/*}
+QS l_segment_is_I: {*/1:I:/*}
+QS l_segment_is_J {*/1:J/*}
+QS l_segment_is_J_0 {*/1:J_0/*}
+QS l_segment_is_N {*/1:N/*}
+QS l_segment_is_N_0 {*/1:N_0/*}
+QS l_segment_is_O {*/1:O/*}
+QS l_segment_is_O: {*/1:O:/*}
+QS l_segment_is_Oi {*/1:Oi/*}
+QS l_segment_is_P {*/1:P/*}
+QS l_segment_is_P: {*/1:P:/*}
+QS l_segment_is_PY {*/1:PY/*}
+QS l_segment_is_PY: {*/1:PY:/*}
+QS l_segment_is_T {*/1:T/*}
+QS l_segment_is_Y {*/1:Y/*}
+QS l_segment_is_Y: {*/1:Y:/*}
+QS l_segment_is_Yi {*/1:Yi/*}
+QS l_segment_is_a {*/1:a/*}
+QS l_segment_is_a: {*/1:a:/*}
+QS l_segment_is_ai {*/1:ai/*}
+QS l_segment_is_ai: {*/1:ai:/*}
+QS l_segment_is_au {*/1:au/*}
+QS l_segment_is_au: {*/1:au:/*}
+QS l_segment_is_axr {*/1:axr/*}
+QS l_segment_is_c {*/1:c/*}
+QS l_segment_is_c_h {*/1:c_h/*}
+QS l_segment_is_ei {*/1:ei/*}
+QS l_segment_is_ei: {*/1:ei:/*}
+QS l_segment_is_f {*/1:f/*}
+QS l_segment_is_h {*/1:h/*}
+QS l_segment_is_i {*/1:i/*}
+QS l_segment_is_i: {*/1:i:/*}
+QS l_segment_is_j {*/1:j/*}
+QS l_segment_is_k {*/1:k/*}
+QS l_segment_is_k_h {*/1:k_h/*}
+QS l_segment_is_l {*/1:l/*}
+QS l_segment_is_l_0 {*/1:l_0/*}
+QS l_segment_is_m {*/1:m/*}
+QS l_segment_is_m_0 {*/1:m_0/*}
+QS l_segment_is_n {*/1:n/*}
+QS l_segment_is_n_0 {*/1:n_0/*}
+QS l_segment_is_ou {*/1:ou/*}
+QS l_segment_is_ou: {*/1:ou:/*}
+QS l_segment_is_p {*/1:p/*}
+QS l_segment_is_p_h {*/1:p_h/*}
+QS l_segment_is_r {*/1:r/*}
+QS l_segment_is_r_0 {*/1:r_0/*}
+QS l_segment_is_s {*/1:s/*}
+QS l_segment_is_sil {*/1:sil/*}
+QS l_segment_is_t {*/1:t/*}
+QS l_segment_is_t_h {*/1:t_h/*}
+QS l_segment_is_u {*/1:u/*}
+QS l_segment_is_u: {*/1:u:/*}
+QS l_segment_is_v {*/1:v/*}
+QS l_segment_is_x {*/1:x/*}
+QS l_segment_is__NA_ {*/1:_NA_/*}
+
+
+
+QS c_segment_is_C {*/2:C/*}
+QS c_segment_is_D {*/2:D/*}
+QS c_segment_is_E {*/2:E/*}
+QS c_segment_is_E: {*/2:E:/*}
+QS c_segment_is_G {*/2:G/*}
+QS c_segment_is_I {*/2:I/*}
+QS c_segment_is_I: {*/2:I:/*}
+QS c_segment_is_J {*/2:J/*}
+QS c_segment_is_J_0 {*/2:J_0/*}
+QS c_segment_is_N {*/2:N/*}
+QS c_segment_is_N_0 {*/2:N_0/*}
+QS c_segment_is_O {*/2:O/*}
+QS c_segment_is_O: {*/2:O:/*}
+QS c_segment_is_Oi {*/2:Oi/*}
+QS c_segment_is_P {*/2:P/*}
+QS c_segment_is_P: {*/2:P:/*}
+QS c_segment_is_PY {*/2:PY/*}
+QS c_segment_is_PY: {*/2:PY:/*}
+QS c_segment_is_T {*/2:T/*}
+QS c_segment_is_Y {*/2:Y/*}
+QS c_segment_is_Y: {*/2:Y:/*}
+QS c_segment_is_Yi {*/2:Yi/*}
+QS c_segment_is_a {*/2:a/*}
+QS c_segment_is_a: {*/2:a:/*}
+QS c_segment_is_ai {*/2:ai/*}
+QS c_segment_is_ai: {*/2:ai:/*}
+QS c_segment_is_au {*/2:au/*}
+QS c_segment_is_au: {*/2:au:/*}
+QS c_segment_is_axr {*/2:axr/*}
+QS c_segment_is_c {*/2:c/*}
+QS c_segment_is_c_h {*/2:c_h/*}
+QS c_segment_is_ei {*/2:ei/*}
+QS c_segment_is_ei: {*/2:ei:/*}
+QS c_segment_is_f {*/2:f/*}
+QS c_segment_is_h {*/2:h/*}
+QS c_segment_is_i {*/2:i/*}
+QS c_segment_is_i: {*/2:i:/*}
+QS c_segment_is_j {*/2:j/*}
+QS c_segment_is_k {*/2:k/*}
+QS c_segment_is_k_h {*/2:k_h/*}
+QS c_segment_is_l {*/2:l/*}
+QS c_segment_is_l_0 {*/2:l_0/*}
+QS c_segment_is_m {*/2:m/*}
+QS c_segment_is_m_0 {*/2:m_0/*}
+QS c_segment_is_n {*/2:n/*}
+QS c_segment_is_n_0 {*/2:n_0/*}
+QS c_segment_is_ou {*/2:ou/*}
+QS c_segment_is_ou: {*/2:ou:/*}
+QS c_segment_is_p {*/2:p/*}
+QS c_segment_is_p_h {*/2:p_h/*}
+QS c_segment_is_r {*/2:r/*}
+QS c_segment_is_r_0 {*/2:r_0/*}
+QS c_segment_is_s {*/2:s/*}
+QS c_segment_is_sil {*/2:sil/*}
+QS c_segment_is_t {*/2:t/*}
+QS c_segment_is_t_h {*/2:t_h/*}
+QS c_segment_is_u {*/2:u/*}
+QS c_segment_is_u: {*/2:u:/*}
+QS c_segment_is_v {*/2:v/*}
+QS c_segment_is_x {*/2:x/*}
+
+
+
+QS r_segment_is_C {*/3:C/*}
+QS r_segment_is_D {*/3:D/*}
+QS r_segment_is_E {*/3:E/*}
+QS r_segment_is_E: {*/3:E:/*}
+QS r_segment_is_G {*/3:G/*}
+QS r_segment_is_I {*/3:I/*}
+QS r_segment_is_I: {*/3:I:/*}
+QS r_segment_is_J {*/3:J/*}
+QS r_segment_is_J_0 {*/3:J_0/*}
+QS r_segment_is_N {*/3:N/*}
+QS r_segment_is_N_0 {*/3:N_0/*}
+QS r_segment_is_O {*/3:O/*}
+QS r_segment_is_O: {*/3:O:/*}
+QS r_segment_is_Oi {*/3:Oi/*}
+QS r_segment_is_P {*/3:P/*}
+QS r_segment_is_P: {*/3:P:/*}
+QS r_segment_is_PY {*/3:PY/*}
+QS r_segment_is_PY: {*/3:PY:/*}
+QS r_segment_is_T {*/3:T/*}
+QS r_segment_is_Y {*/3:Y/*}
+QS r_segment_is_Y: {*/3:Y:/*}
+QS r_segment_is_Yi {*/3:Yi/*}
+QS r_segment_is_a {*/3:a/*}
+QS r_segment_is_a: {*/3:a:/*}
+QS r_segment_is_ai {*/3:ai/*}
+QS r_segment_is_ai: {*/3:ai:/*}
+QS r_segment_is_au {*/3:au/*}
+QS r_segment_is_au: {*/3:au:/*}
+QS r_segment_is_axr {*/3:axr/*}
+QS r_segment_is_c {*/3:c/*}
+QS r_segment_is_c_h {*/3:c_h/*}
+QS r_segment_is_ei {*/3:ei/*}
+QS r_segment_is_ei: {*/3:ei:/*}
+QS r_segment_is_f {*/3:f/*}
+QS r_segment_is_h {*/3:h/*}
+QS r_segment_is_i {*/3:i/*}
+QS r_segment_is_i: {*/3:i:/*}
+QS r_segment_is_j {*/3:j/*}
+QS r_segment_is_k {*/3:k/*}
+QS r_segment_is_k_h {*/3:k_h/*}
+QS r_segment_is_l {*/3:l/*}
+QS r_segment_is_l_0 {*/3:l_0/*}
+QS r_segment_is_m {*/3:m/*}
+QS r_segment_is_m_0 {*/3:m_0/*}
+QS r_segment_is_n {*/3:n/*}
+QS r_segment_is_n_0 {*/3:n_0/*}
+QS r_segment_is_ou {*/3:ou/*}
+QS r_segment_is_ou: {*/3:ou:/*}
+QS r_segment_is_p {*/3:p/*}
+QS r_segment_is_p_h {*/3:p_h/*}
+QS r_segment_is_r {*/3:r/*}
+QS r_segment_is_r_0 {*/3:r_0/*}
+QS r_segment_is_s {*/3:s/*}
+QS r_segment_is_sil {*/3:sil/*}
+QS r_segment_is_t {*/3:t/*}
+QS r_segment_is_t_h {*/3:t_h/*}
+QS r_segment_is_u {*/3:u/*}
+QS r_segment_is_u: {*/3:u:/*}
+QS r_segment_is_v {*/3:v/*}
+QS r_segment_is_x {*/3:x/*}
+QS r_segment_is__NA_ {*/3:_NA_/*}
+
+
+
+QS rr_segment_is_C {*/4:C/*}
+QS rr_segment_is_D {*/4:D/*}
+QS rr_segment_is_E {*/4:E/*}
+QS rr_segment_is_E: {*/4:E:/*}
+QS rr_segment_is_G {*/4:G/*}
+QS rr_segment_is_I {*/4:I/*}
+QS rr_segment_is_I: {*/4:I:/*}
+QS rr_segment_is_J {*/4:J/*}
+QS rr_segment_is_J_0 {*/4:J_0/*}
+QS rr_segment_is_N {*/4:N/*}
+QS rr_segment_is_N_0 {*/4:N_0/*}
+QS rr_segment_is_O {*/4:O/*}
+QS rr_segment_is_O: {*/4:O:/*}
+QS rr_segment_is_Oi {*/4:Oi/*}
+QS rr_segment_is_P {*/4:P/*}
+QS rr_segment_is_P: {*/4:P:/*}
+QS rr_segment_is_PY {*/4:PY/*}
+QS rr_segment_is_PY: {*/4:PY:/*}
+QS rr_segment_is_T {*/4:T/*}
+QS rr_segment_is_Y {*/4:Y/*}
+QS rr_segment_is_Y: {*/4:Y:/*}
+QS rr_segment_is_Yi {*/4:Yi/*}
+QS rr_segment_is_a {*/4:a/*}
+QS rr_segment_is_a: {*/4:a:/*}
+QS rr_segment_is_ai {*/4:ai/*}
+QS rr_segment_is_ai: {*/4:ai:/*}
+QS rr_segment_is_au {*/4:au/*}
+QS rr_segment_is_au: {*/4:au:/*}
+QS rr_segment_is_axr {*/4:axr/*}
+QS rr_segment_is_c {*/4:c/*}
+QS rr_segment_is_c_h {*/4:c_h/*}
+QS rr_segment_is_ei {*/4:ei/*}
+QS rr_segment_is_ei: {*/4:ei:/*}
+QS rr_segment_is_f {*/4:f/*}
+QS rr_segment_is_h {*/4:h/*}
+QS rr_segment_is_i {*/4:i/*}
+QS rr_segment_is_i: {*/4:i:/*}
+QS rr_segment_is_j {*/4:j/*}
+QS rr_segment_is_k {*/4:k/*}
+QS rr_segment_is_k_h {*/4:k_h/*}
+QS rr_segment_is_l {*/4:l/*}
+QS rr_segment_is_l_0 {*/4:l_0/*}
+QS rr_segment_is_m {*/4:m/*}
+QS rr_segment_is_m_0 {*/4:m_0/*}
+QS rr_segment_is_n {*/4:n/*}
+QS rr_segment_is_n_0 {*/4:n_0/*}
+QS rr_segment_is_ou {*/4:ou/*}
+QS rr_segment_is_ou: {*/4:ou:/*}
+QS rr_segment_is_p {*/4:p/*}
+QS rr_segment_is_p_h {*/4:p_h/*}
+QS rr_segment_is_r {*/4:r/*}
+QS rr_segment_is_r_0 {*/4:r_0/*}
+QS rr_segment_is_s {*/4:s/*}
+QS rr_segment_is_sil {*/4:sil/*}
+QS rr_segment_is_t {*/4:t/*}
+QS rr_segment_is_t_h {*/4:t_h/*}
+QS rr_segment_is_u {*/4:u/*}
+QS rr_segment_is_u: {*/4:u:/*}
+QS rr_segment_is_v {*/4:v/*}
+QS rr_segment_is_x {*/4:x/*}
+QS rr_segment_is__NA_ {*/4:_NA_/*}
+
+
+
+CQS length_left_syllable {*/5:(\d+)/*}
+
+
+
+CQS length_current_syllable {*/6:(\d+)/*}
+
+
+
+CQS length_right_syllable {*/7:(\d+)/*}
+
+
+
+CQS since_beginning_of_syllable {*/8:(\d+)/*}
+
+
+
+CQS till_end_of_syllable {*/9:(\d+)/*}
+
+
+
+CQS length_left_word_in_segments {*/10:(\d+)/*}
+
+
+
+CQS length_current_word_in_segments {*/11:(\d+)/*}
+
+
+
+CQS length_right_word_in_segments {*/12:(\d+)/*}
+
+
+
+CQS since_beginning_of_word_in_segments {*/13:(\d+)/*}
+
+
+
+CQS till_end_of_word_in_segments {*/14:(\d+)/*}
+
+
+
+CQS length_left_word_in_syllables {*/15:(\d+)/*}
+
+
+
+CQS length_current_word_in_syllables {*/16:(\d+)/*}
+
+
+
+CQS length_right_word_in_syllables {*/17:(\d+)/*}
+
+
+
+CQS since_beginning_of_word_in_syllables {*/18:(\d+)/*}
+
+
+
+CQS till_end_of_word_in_syllables {*/19:(\d+)/*}
+
+
+
+CQS length_l_phrase_in_words {*/20:(\d+)/*}
+
+
+
+CQS length_c_phrase_in_words {*/21:(\d+)/*}
+
+
+
+CQS length_r_phrase_in_words {*/22:(\d+)/*}
+
+
+
+CQS length_l_phrase_in_syllables {*/23:(\d+)/*}
+
+
+
+CQS length_c_phrase_in_syllables {*/24:(\d+)/*}
+
+
+
+CQS length_r_phrase_in_syllables {*/25:(\d+)/*}
+
+
+
+CQS length_l_phrase_in_segments {*/26:(\d+)/*}
+
+
+
+CQS length_c_phrase_in_segments {*/27:(\d+)/*}
+
+
+
+CQS length_r_phrase_in_segments {*/28:(\d+)/*}
+
+
+
+CQS since_phrase_start_in_segs {*/29:(\d+)/*}
+
+
+
+CQS till_phrase_end_in_segs {*/30:(\d+)/*}
+
+
+
+CQS since_phrase_start_in_syllables {*/31:(\d+)/*}
+
+
+
+CQS till_phrase_end_in_syllables {*/32:(\d+)/*}
+
+
+
+CQS since_phrase_start_in_words {*/33:(\d+)/*}
+
+
+
+CQS till_phrase_end_in_words {*/34:(\d+)/*}
+
+
+
+CQS since_start_sentence_in_segments {*/35:(\d+)/*}
+
+
+
+CQS since_start_sentence_in_syllables {*/36:(\d+)/*}
+
+
+
+CQS since_start_sentence_in_words {*/37:(\d+)/*}
+
+
+
+CQS since_start_sentence_in_phrases {*/38:(\d+)/*}
+
+
+
+CQS till_end_sentence_in_segments {*/39:(\d+)/*}
+
+
+
+CQS till_end_sentence_in_syllables {*/40:(\d+)/*}
+
+
+
+CQS till_end_sentence_in_words {*/41:(\d+)/*}
+
+
+
+CQS till_end_sentence_in_phrases {*/42:(\d+)/*}
+
+
+
+CQS length_sentence_in_segments {*/43:(\d+)/*}
+
+
+
+CQS length_sentence_in_syllables {*/44:(\d+)/*}
+
+
+
+CQS length_sentence_in_words {*/45:(\d+)/*}
+
+
+
+CQS length_sentence_in_phrases {*/46:(\d+)/*}
+
+
+

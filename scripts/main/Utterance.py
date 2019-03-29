@@ -42,7 +42,7 @@ class UtteranceElement(etree.ElementBase):
     
     def safe_xpath(self, path, default_value='_NA_'):
         """
-        Provide padding for e.g. end-of-sentence contexts if xpath doesn't 
+        Provide padding for e.g. end-of-sentence contexts if xpath doesn't
         find anything. In order to handle different padding types (e.g. mean vector for 
         VSM features). 
         
@@ -276,8 +276,12 @@ class Utterance(object):
         assert  utt_dir_name == "utt"
 
         dirname = os.path.join(corpus_dir, file_type)
-        if not os.path.isdir(dirname):
+        # if not os.path.isdir(dirname):
+        #     os.mkdir(dirname)
+        try:
             os.mkdir(dirname)
+        except FileExistsError:
+            pass
 
         return dirname
 

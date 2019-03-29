@@ -1,0 +1,4 @@
+_POSS_PAUSE_ skip
+_POSS_PAUSE_ sil
+_PROB_PAUSE_ sil
+_PROB_PAUSE_ skip

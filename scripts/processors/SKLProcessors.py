@@ -118,6 +118,8 @@ class SKLDecisionTree(SUtteranceProcessor):
         #### [Added dump_features method to Utterance class, use that: ]
         x_data = []
         y_data = []
+
+        # TODO: do training in chunks, memory overload on large datasets
         for utterance in speech_corpus:
             
             utt_feats = utterance.dump_features(self.target_nodes, \

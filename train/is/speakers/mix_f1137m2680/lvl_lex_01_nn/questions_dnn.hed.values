@@ -1,0 +1,47 @@
+0	ll_segment	CATEGORICAL	C D E E: G I I: J J_0 N N_0 O O: Oi P P: PY PY: T Y Y: Yi a a: ai ai: au au: axr c c_h ei ei: f h i i: j k k_h l l_0 m m_0 n n_0 ou ou: p p_h r r_0 s sil t t_h u u: v x
+1	l_segment	CATEGORICAL	C D E E: G I I: J J_0 N N_0 O O: Oi P P: PY PY: T Y Y: Yi a a: ai ai: au au: axr c c_h ei ei: f h i i: j k k_h l l_0 m m_0 n n_0 ou ou: p p_h r r_0 s sil t t_h u u: v x
+2	c_segment	CATEGORICAL	C D E E: G I I: J J_0 N N_0 O O: Oi P P: PY PY: T Y Y: Yi a a: ai ai: au au: axr c c_h ei ei: f h i i: j k k_h l l_0 m m_0 n n_0 ou ou: p p_h r r_0 s sil t t_h u u: v x
+3	r_segment	CATEGORICAL	C D E E: G I I: J J_0 N N_0 O O: Oi P P: PY PY: T Y Y: Yi a a: ai ai: au au: axr c c_h ei ei: f h i i: j k k_h l l_0 m m_0 n n_0 ou ou: p p_h r r_0 s sil t t_h u u: v x
+4	rr_segment	CATEGORICAL	C D E E: G I I: J J_0 N N_0 O O: Oi P P: PY PY: T Y Y: Yi a a: ai ai: au au: axr c c_h ei ei: f h i i: j k k_h l l_0 m m_0 n n_0 ou ou: p p_h r r_0 s sil t t_h u u: v x
+5	length_left_syllable	NUMERIC	MAX:9
+6	length_current_syllable	NUMERIC	MAX:9
+7	length_right_syllable	NUMERIC	MAX:9
+8	since_beginning_of_syllable	NUMERIC	MAX:9
+9	till_end_of_syllable	NUMERIC	MAX:9
+10	length_left_word_in_segments	NUMERIC	MAX:22
+11	length_current_word_in_segments	NUMERIC	MAX:22
+12	length_right_word_in_segments	NUMERIC	MAX:22
+13	since_beginning_of_word_in_segments	NUMERIC	MAX:22
+14	till_end_of_word_in_segments	NUMERIC	MAX:22
+15	length_left_word_in_syllables	NUMERIC	MAX:8
+16	length_current_word_in_syllables	NUMERIC	MAX:8
+17	length_right_word_in_syllables	NUMERIC	MAX:8
+18	since_beginning_of_word_in_syllables	NUMERIC	MAX:8
+19	till_end_of_word_in_syllables	NUMERIC	MAX:8
+20	length_l_phrase_in_words	NUMERIC	MAX:12
+21	length_c_phrase_in_words	NUMERIC	MAX:12
+22	length_r_phrase_in_words	NUMERIC	MAX:10
+23	length_l_phrase_in_syllables	NUMERIC	MAX:19
+24	length_c_phrase_in_syllables	NUMERIC	MAX:26
+25	length_r_phrase_in_syllables	NUMERIC	MAX:20
+26	length_l_phrase_in_segments	NUMERIC	MAX:51
+27	length_c_phrase_in_segments	NUMERIC	MAX:69
+28	length_r_phrase_in_segments	NUMERIC	MAX:56
+29	since_phrase_start_in_segs	NUMERIC	MAX:69
+30	till_phrase_end_in_segs	NUMERIC	MAX:69
+31	since_phrase_start_in_syllables	NUMERIC	MAX:26
+32	till_phrase_end_in_syllables	NUMERIC	MAX:26
+33	since_phrase_start_in_words	NUMERIC	MAX:12
+34	till_phrase_end_in_words	NUMERIC	MAX:12
+35	since_start_sentence_in_segments	NUMERIC	MAX:78
+36	since_start_sentence_in_syllables	NUMERIC	MAX:30
+37	since_start_sentence_in_words	NUMERIC	MAX:14
+38	since_start_sentence_in_phrases	NUMERIC	MAX:5
+39	till_end_sentence_in_segments	NUMERIC	MAX:78
+40	till_end_sentence_in_syllables	NUMERIC	MAX:30
+41	till_end_sentence_in_words	NUMERIC	MAX:14
+42	till_end_sentence_in_phrases	NUMERIC	MAX:5
+43	length_sentence_in_segments	NUMERIC	MAX:78
+44	length_sentence_in_syllables	NUMERIC	MAX:30
+45	length_sentence_in_words	NUMERIC	MAX:14
+46	length_sentence_in_phrases	NUMERIC	MAX:5

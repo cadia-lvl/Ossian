@@ -209,7 +209,7 @@ class SUtteranceProcessor(object):
             utterance.set("processors_used", "" )
         ## check this processor hasn't already been used on utt:
         proc_used = utterance.get("processors_used").split(",")
-        if self.processor_name in proc_used:
+        if self.processor_name in proc_used and voice_mode != 'runtime':
             print("u", end=' ')
             return  ## don't do anything
         
