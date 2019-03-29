@@ -530,8 +530,6 @@ class Lexicon(SUtteranceProcessor):
             print(e.output.encode('utf-8'))
             return None
 
-        print('SUCCESS!')
-
         if b'failed to convert' in pronun:
             print(comm)
             print('WARNING: couldnt run LTS for %s'%(word))
@@ -550,7 +548,7 @@ class Lexicon(SUtteranceProcessor):
         ## ['/afs/inf.ed.ac.uk/group/cstr/projects/blizzard_entries/blizzard2015/tool/Ossian//tools/bin/g2p.py:37: DeprecationWarning: the sets module is deprecated', '  import math, sets, sys', 'stack usage:  415', 'androcles\ta1 n d r @0 k @0 lw z']
 
         ## deal with this, but TODO: work out long-term solution --
-        print(word)
+        #print(word)
         assert len(pronun) >= 2,str(pronun)     ## ==   -->   >=     to handle extra warnings
         #if type(word) == str:
            # word = word.decode('utf-8')
