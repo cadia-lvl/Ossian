@@ -527,7 +527,7 @@ class Lexicon(SUtteranceProcessor):
             pronun = subprocess.check_output(comm.encode('utf-8'), shell=True, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             print(str(e.returncode) + "\n")
-            print(e.output.encode('utf-8'))
+            print(e.output)
             return None
 
         if b'failed to convert' in pronun:
