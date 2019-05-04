@@ -40,7 +40,8 @@ if [ $BASIC == 1 ] ; then
     git clone https://github.com/cadia-lvl/merlin.git
     cd merlin
     ## reset to this specific version, which I have tested, must check later versions:--
-    # git reset --hard 8aed278  
+    ## This version is prior to large modifications for multi-speaker models!
+    git reset --hard a97efa3bba1a2bce121ba973641c214745351c92  
 
     ## Ossian will use Merlin's copy of World, instead of its own as previously:-
     cd $OSSIAN/tools/merlin/tools/WORLD/
@@ -150,6 +151,10 @@ if [ $SEQUITUR == 1 ] ; then
         echo 'Apply patch to sequitur for compilation on Mac OS...'
         patch -p1 -d . < ../patch/sequitur_compilation.patch
     fi
+
+    ## Port all python files to python 3 syntax
+    futurize -0 -w ./*.py
+    futurize -0 -w ../lib/python3.5/site-packages/*.py
 
     ## Compile:
     python setup.py install --prefix  $OSSIAN/tools
