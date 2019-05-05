@@ -16,7 +16,7 @@ from processors.UtteranceProcessor import SUtteranceProcessor, Element
 # from processors.NodeEnricher import *
 import datetime
 from naive import naive_util
-from normalizing import expand_numbers
+# from normalizing import expand_numbers
 
 from lxml import etree
 

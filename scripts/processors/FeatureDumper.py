@@ -201,7 +201,7 @@ class FeatureDumper(SUtteranceProcessor):
 
         for v in value_list:
             # for a list of strings, the isnan test will fail with an error
-            if type(v)==str or type(v)==unicode:
+            if type(v)==str:
                 return value_list
         if len(value_list)>0:
             print('Type 1st elem in value list: ' + str(type(value_list[0])))

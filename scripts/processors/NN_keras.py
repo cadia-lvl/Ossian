@@ -593,9 +593,9 @@ class NNDurationPredictor(SUtteranceProcessor):
             # print "Utt has a natural waveform -- don't synthesise"
             return
 
-        # if not self.trained:
-        #             print 'WARNING: Cannot apply processor %s till model is trained'%(self.processor_name)
-        #             return
+        if not self.trained:
+            print('WARNING: Cannot apply processor %s till model is trained'%(self.processor_name))
+            return
 
         label = utt.get_filename(self.input_label_filetype)
 
@@ -758,9 +758,9 @@ class NNAcousticPredictor(SUtteranceProcessor):
             # print "Utt has a natural waveform -- don't synthesise"
             # return
 
-        # if not self.trained:
-        #             print 'WARNING: Cannot apply processor %s till model is trained'%(self.processor_name)
-        #             return
+        if not self.trained:
+            print('WARNING: Cannot apply processor %s till model is trained'%(self.processor_name))
+            return
 
         label = utt.get_filename(self.input_label_filetype)
         owave = utt.get_filename(self.output_filetype)

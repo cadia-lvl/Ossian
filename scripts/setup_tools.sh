@@ -4,7 +4,7 @@
 BASIC=1
 
 ### The following are only needed to train letter-to-sound rules, and for the gold standard english systems:
-SEQUITUR=1 
+SEQUITUR=0
 STANFORD=0
 
 
@@ -35,6 +35,7 @@ if [ $BASIC == 1 ] ; then
     ## Assuming that you want to compile everything cleanly from scratch:
     rm -rf $OSSIAN/tools/downloads/*
     rm -rf $OSSIAN/tools/bin/*
+    rm -rf $OSSIAN/tools/merlin/*
 
     cd $OSSIAN/tools/
     git clone https://github.com/cadia-lvl/merlin.git
@@ -153,8 +154,8 @@ if [ $SEQUITUR == 1 ] ; then
     fi
 
     ## Port all python files to python 3 syntax
-    futurize -0 -w ./*.py
-    futurize -0 -w ../lib/python3.5/site-packages/*.py
+    # futurize -0 -w ./*.py
+    # futurize -0 -w ../lib/python3.5/site-packages/*.py
 
     ## Compile:
     python setup.py install --prefix  $OSSIAN/tools
